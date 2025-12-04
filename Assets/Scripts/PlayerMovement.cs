@@ -80,13 +80,13 @@ public class PlayerMovement : MonoBehaviour
         //clamp max acceleration
         velocityChange = Vector3.ClampMagnitude(velocityChange, acceleration); //limit how much the player's velocity can change
 
-        // if no input, decelerate
+        //if no input decelerate
         if (horizontalInput == 0 && verticalInput == 0)
         {
-            Vector3 decel = -horizontalVel * 5f; // adjust "5f" for more or less friction
+            Vector3 decel = -horizontalVel * 5f; //adjust "5f" for more or less friction
             rb.AddForce(new Vector3(decel.x, 0f, decel.z), ForceMode.Force);
 
-            // restore vertical velocity and exit early
+            //restore vertical velocity and exit early
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, yVel, rb.linearVelocity.z);
             return;
         }
@@ -96,7 +96,6 @@ public class PlayerMovement : MonoBehaviour
 
         //restore vertical velocity so jumping still works
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, yVel, rb.linearVelocity.z);
-
 
     }
 }

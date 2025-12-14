@@ -13,6 +13,13 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rb;
     public float acceleration = 10f;
 
+    [Header("Ground Check")]
+    public float playerHeight = 2f;
+    public LayerMask groundLayer;
+    public float groundDrag = 5f;
+    private RaycastHit slopeHit;
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody>(); //gets the Rigidbody that is attached to the player
@@ -33,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void MyInput()
     {
+    
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             Jump();

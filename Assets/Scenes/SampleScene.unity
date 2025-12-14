@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 47b7a45414f3b564e9e8349bfa18b29f, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 5336727d7be32404c9ac396789142e1c, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -541,7 +541,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 732018294}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -591,10 +591,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35854464e6a21524e88c1dcde6d4a992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 60
+  moveSpeed: 30
   jumpForce: 6
   orientation: {fileID: 1242608037}
-  acceleration: 15
+  acceleration: 10
+  playerHeight: 2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  groundDrag: 5
 --- !u!1 &771503214
 GameObject:
   m_ObjectHideFlags: 0
@@ -1016,7 +1021,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: eb02f52270dc70340a30dac6c8ea2929, type: 2}
+  - {fileID: 2100000, guid: 6179e9f199616944f8e04d6d1c70deeb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1469,9 +1474,9 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 771503218}
-  - {fileID: 732018295}
   - {fileID: 1061554739}
   - {fileID: 1410601617}
   - {fileID: 772564763}
   - {fileID: 1606601161}
   - {fileID: 118355844}
+  - {fileID: 732018295}

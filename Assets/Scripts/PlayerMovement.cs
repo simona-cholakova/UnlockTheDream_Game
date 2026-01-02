@@ -70,7 +70,6 @@
 //         {
 //             rb.linearDamping = 0;
 //         }
-
 //     }
 
 //     void FixedUpdate() //unity runs this at a fixed rate
@@ -91,7 +90,6 @@
 //             Invoke(nameof(resetJump), jumpCooldown); //when space remains pressed, you keep jumping
 //         }
 //     }
-
 
 //     private void MovePlayer()
 //     {
@@ -135,7 +133,6 @@
 //         readyToJump = true;
 //     }
 // }
-
 
 using UnityEngine;
 

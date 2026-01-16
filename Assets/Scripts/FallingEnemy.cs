@@ -3,12 +3,19 @@ using UnityEngine;
 public class FallingEnemy : MonoBehaviour
 {
 
+    public float rotationSpeed = 100f;
 
-    private void OnTriggerEnter(Collider other)
+    void Update()
     {
-        if (other.CompareTag("Player"))
+        //rotate Y axis while falling
+        transform.Rotate(0, rotationSpeed * Time.deltaTime, 0);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Falling object hit the player!");
+            Debug.Log("Hit player!");
         }
     }
 }

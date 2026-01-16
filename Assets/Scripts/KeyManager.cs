@@ -1,16 +1,35 @@
 using UnityEngine;
+using TMPro;        // use this if TextMeshPro
+// using UnityEngine.UI; // use this if normal UI Text
 
 public class KeyManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public static KeyManager instance;
+
+    public int keysCollected = 0;
+    public int totalKeys = 3;
+
+    public TMP_Text keyText;     // TextMeshPro
+    // public Text keyText;      // Normal UI Text version
+
+    private void Awake()
     {
-        
+        instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        
+        UpdateUI();
+    }
+
+    public void AddKey()
+    {
+        keysCollected++;
+        UpdateUI();
+    }
+
+    void UpdateUI()
+    {
+        keyText.text = keysCollected + "/" + totalKeys;
     }
 }

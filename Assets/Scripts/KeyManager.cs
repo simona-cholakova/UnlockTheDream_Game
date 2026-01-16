@@ -1,6 +1,5 @@
 using UnityEngine;
-using TMPro;        // use this if TextMeshPro
-// using UnityEngine.UI; // use this if normal UI Text
+using TMPro;        
 
 public class KeyManager : MonoBehaviour
 {
@@ -9,8 +8,7 @@ public class KeyManager : MonoBehaviour
     public int keysCollected = 0;
     public int totalKeys = 3;
 
-    public TMP_Text keyText;     // TextMeshPro
-    // public Text keyText;      // Normal UI Text version
+    public TMP_Text keyText;     
 
     private void Awake()
     {

@@ -3,6 +3,7 @@ using UnityEngine;
 public class FallingEnemy : MonoBehaviour
 {
 
+    public ParticleSystem myParticles;
     public float rotationSpeed = 100f;
 
     void Update()
@@ -16,6 +17,7 @@ public class FallingEnemy : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("Hit player!");
+            myParticles.Play();
         }
     }
 }

@@ -994,6 +994,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.8433214, z: 0.7578409}
   m_Center: {x: 0, y: 0.8939641, z: -0.035480134}
+--- !u!114 &331541153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 331541147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49f9f75760299b64cb28581706a6316c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DistanceBetweenTwoObjects
+  obj: {fileID: 732018294}
+  distanceBetweenObjects: 52.2362
 --- !u!1 &345545115 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3754608908043963507, guid: 22109f618aa454ffb8306b7069e5e61a, type: 3}
@@ -3290,11 +3304,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 77b98d06b6e99a94da531b381e03aae3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13.51793
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 77b98d06b6e99a94da531b381e03aae3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 760.1061
+      value: 729.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 77b98d06b6e99a94da531b381e03aae3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3332,10 +3346,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: walkingEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 77b98d06b6e99a94da531b381e03aae3, type: 3}
+      propertyPath: m_TagString
+      value: Big Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 2664098864995057252, guid: 77b98d06b6e99a94da531b381e03aae3, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: eddec552ce707064a905a87c833d8d3c, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 77b98d06b6e99a94da531b381e03aae3, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 77b98d06b6e99a94da531b381e03aae3, type: 3}
       propertyPath: m_Controller
       value: 
@@ -3347,6 +3369,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 77b98d06b6e99a94da531b381e03aae3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 331541150}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 77b98d06b6e99a94da531b381e03aae3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 331541153}
   m_SourcePrefab: {fileID: 100100000, guid: 77b98d06b6e99a94da531b381e03aae3, type: 3}
 --- !u!1001 &1343066581
 PrefabInstance:

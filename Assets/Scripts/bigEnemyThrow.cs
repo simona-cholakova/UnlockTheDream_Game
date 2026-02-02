@@ -24,13 +24,32 @@ public class bigEnemyThrow : MonoBehaviour
         distanceBetweenObjects = Vector3.Distance(transform.position, obj.transform.position);
         Debug.DrawLine(transform.position, obj.transform.position, Color.green);
         Debug.Log(distanceBetweenObjects);
-        if (distanceBetweenObjects <= 35f)
+        
+        FacePlayer();
+
+        if (distanceBetweenObjects <= 40f)
         {
             animator.SetBool("playerIsClose", true);
         }
         else
         {
             animator.SetBool("playerIsClose", false);
+        }
+    }
+
+    private void FacePlayer()
+    {
+        //get direction to player (ignore vertical component for ground-based enemies)
+        Vector3 direction = obj.transform.position - transform.position;
+        direction.y = 0; // Keep the enemy upright
+        
+        //only rotate if there's a meaningful direction
+        if (direction.magnitude > 0.01f)
+        {
+            //create the rotation to look at player
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            
+            transform.rotation = targetRotation;
         }
     }
 

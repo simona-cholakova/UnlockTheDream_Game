@@ -3,14 +3,18 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-[ExecuteInEditMode]
 public class bigEnemyThrow : MonoBehaviour
 {
-    public GameObject obj;
+    public GameObject playerObj;
 
     private Animator animator;
 
     public float distanceBetweenObjects;
+
+    [Header("Throw Settings")]
+    public GameObject BlueBall;
+    public float throwForce = 12f;
+
 
     private void OnEnable()
     {
@@ -19,12 +23,12 @@ public class bigEnemyThrow : MonoBehaviour
 
     private void Update()
     {
-        if (obj == null) return;
+        if (playerObj == null) return;
 
-        distanceBetweenObjects = Vector3.Distance(transform.position, obj.transform.position);
-        Debug.DrawLine(transform.position, obj.transform.position, Color.green);
+        distanceBetweenObjects = Vector3.Distance(transform.position, playerObj.transform.position);
+        Debug.DrawLine(transform.position, playerObj.transform.position, Color.green);
         Debug.Log(distanceBetweenObjects);
-        
+
         FacePlayer();
 
         if (distanceBetweenObjects <= 40f)
@@ -40,26 +44,49 @@ public class bigEnemyThrow : MonoBehaviour
     private void FacePlayer()
     {
         //get direction to player (ignore vertical component for ground-based enemies)
-        Vector3 direction = obj.transform.position - transform.position;
+        Vector3 direction = playerObj.transform.position - transform.position;
         direction.y = 0; // Keep the enemy upright
-        
+
         //only rotate if there's a meaningful direction
         if (direction.magnitude > 0.01f)
         {
             //create the rotation to look at player
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-            
+
             transform.rotation = targetRotation;
         }
     }
 
+    public void SpawnBall()
+    {
+        BlueBall.transform.localPosition = Vector3.zero;
+        BlueBall.SetActive(true);
+
+        Rigidbody rb = BlueBall.GetComponent<Rigidbody>();
+        rb.isKinematic = true;
+        rb.useGravity = false;
+    }
+
+    public void ThrowBall()
+    {
+        BlueBall.transform.parent = null;
+
+        Rigidbody rb = BlueBall.GetComponent<Rigidbody>();
+        rb.isKinematic = false;
+        rb.useGravity = true;
+
+        Vector3 dir = (playerObj.transform.position - BlueBall.transform.position).normalized;
+        rb.AddForce(dir * throwForce, ForceMode.Impulse);
+    }
+
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (obj == null) return;
+        if (playerObj == null) return;
 
         Handles.Label(
-            (transform.position + obj.transform.position) / 2f,
+            (transform.position + playerObj.transform.position) / 2f,
             distanceBetweenObjects.ToString("F2")
         );
     }

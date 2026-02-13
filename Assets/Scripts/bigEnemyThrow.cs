@@ -52,6 +52,7 @@ public class bigEnemyThrow : MonoBehaviour
     }
 
 
+
     // void MoveTowardsPlayer()
     // {
     //     Vector3 direction = playerObj.transform.position - transform.position;
@@ -76,25 +77,27 @@ public class bigEnemyThrow : MonoBehaviour
     void MoveTowardsPlayer()
     {
         Vector3 direction = playerObj.transform.position - transform.position;
-        direction.y = 0;
+        direction.y = 0;              // ignore vertical
         direction.Normalize();
 
-        //horizontal movement
+        // horizontal movement
         Vector3 move = direction * moveSpeed;
 
-        //vertical movement
+        // vertical movement
         if (controller.isGrounded)
         {
-            verticalVelocity = -0.1f; //small value to keep grounded
+            verticalVelocity = -0.1f; // small value to stick to the ground
         }
         else
         {
             verticalVelocity += gravity * Time.deltaTime;
         }
+
         move.y = verticalVelocity;
 
         controller.Move(move * Time.deltaTime);
     }
+
 
 
     private void Update()
@@ -138,6 +141,7 @@ public class bigEnemyThrow : MonoBehaviour
         {
             //create the rotation to look at player
             Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5f * Time.deltaTime);
 
             transform.rotation = targetRotation;
         }

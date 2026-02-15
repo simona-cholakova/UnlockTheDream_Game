@@ -5,7 +5,7 @@ public class PlayerInventory : MonoBehaviour
     public static PlayerInventory instance;
     public bool hasShield = false;
     public GameObject equippedShield;
-    private bool shieldActive = false;
+    public bool shieldActive = false;
 
     void Awake()
     {

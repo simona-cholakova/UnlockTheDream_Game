@@ -776,6 +776,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BallEffect
   effect: {fileID: 1322065704}
   playerTransform: {fileID: 1248599171}
+  enemyTransform: {fileID: 331541158}
 --- !u!135 &110878204
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1345,6 +1346,11 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!4 &331541158 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 77b98d06b6e99a94da531b381e03aae3, type: 3}
+  m_PrefabInstance: {fileID: 1323398085}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &345545115 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3754608908043963507, guid: 22109f618aa454ffb8306b7069e5e61a, type: 3}
@@ -2308,6 +2314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInventory
   hasShield: 0
   equippedShield: {fileID: 65359348}
+  shieldActive: 0
 --- !u!1 &771503214
 GameObject:
   m_ObjectHideFlags: 0
@@ -4011,7 +4018,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 77b98d06b6e99a94da531b381e03aae3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 77b98d06b6e99a94da531b381e03aae3, type: 3}
       propertyPath: m_TagString
@@ -4444,7 +4451,7 @@ Transform:
   m_GameObject: {fileID: 1412017708}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.32, z: 0}
+  m_LocalPosition: {x: 0, y: 2.21, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

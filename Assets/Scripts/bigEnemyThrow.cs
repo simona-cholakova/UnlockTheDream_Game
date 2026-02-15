@@ -29,8 +29,6 @@ public class bigEnemyThrow : MonoBehaviour
     public float stopDistance = 17f;
     CharacterController controller;
 
-
-
     private void OnEnable()
     {
         animator = GetComponent<Animator>();
@@ -50,8 +48,6 @@ public class bigEnemyThrow : MonoBehaviour
             controller.center = new Vector3(0, height / 2f, 0);
         }
     }
-
-
 
     // void MoveTowardsPlayer()
     // {
@@ -77,27 +73,24 @@ public class bigEnemyThrow : MonoBehaviour
     void MoveTowardsPlayer()
     {
         Vector3 direction = playerObj.transform.position - transform.position;
-        direction.y = 0;              // ignore vertical
+        direction.y = 0;              //ignore vertical
         direction.Normalize();
 
         // horizontal movement
         Vector3 move = direction * moveSpeed;
 
         // vertical movement
-        if (controller.isGrounded)
+        if (controller.isGrounded && verticalVelocity < 0)
         {
-            verticalVelocity = -0.1f; // small value to stick to the ground
+            verticalVelocity = -2f;
         }
-        else
-        {
-            verticalVelocity += gravity * Time.deltaTime;
-        }
+
+        verticalVelocity += gravity * Time.deltaTime;
 
         move.y = verticalVelocity;
 
         controller.Move(move * Time.deltaTime);
     }
-
 
 
     private void Update()

@@ -13,7 +13,9 @@ public class BallEffect : MonoBehaviour
         {
             //place effect at the hit point
             effect.transform.position = collision.contacts[0].point;
+            StopAllCoroutines();
             effect.SetActive(true);
+            StartCoroutine(DisableEffectAfterTime());
 
             //check if shield is in apllied or not, if yes then attack the enemy, if no then attack player
 
@@ -40,7 +42,14 @@ public class BallEffect : MonoBehaviour
 
                 follow.target = playerTransform;
             }
+            gameObject.SetActive(false);
         }
+    }
+
+    IEnumerator DisableEffectAfterTime()
+    {
+        yield return new WaitForSeconds(3f);
+        effect.SetActive(false);
     }
     IEnumerator DestroyEnemyAfterDelay()
     {

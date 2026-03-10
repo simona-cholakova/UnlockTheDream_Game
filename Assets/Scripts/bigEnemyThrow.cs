@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Rendering;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -21,7 +23,7 @@ public class bigEnemyThrow : MonoBehaviour
     public float yOffset = 0f; //set to half collider height MAYBE???
 
     private float verticalVelocity = 0f;
-    private float gravity = -9.81f;
+    private float gravity = -25f;
 
 
     [Header("Movement")]
@@ -36,62 +38,35 @@ public class bigEnemyThrow : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        Renderer rend = GetComponentInChildren<Renderer>();
-        if (rend != null)
-        {
-            Vector3 size = rend.bounds.size;
-            float width = size.x;
-            float height = size.y;
-
-            controller.height = height;
-            controller.radius = width / 2f;
-            controller.center = new Vector3(0, height / 2f, 0);
-        }
     }
 
-    // void MoveTowardsPlayer()
-    // {
-    //     Vector3 direction = playerObj.transform.position - transform.position;
-    //     direction.y = 0;              // ignore height
-    //     direction.Normalize();
-
-    //     transform.position += direction * moveSpeed * Time.deltaTime;
-    // }
-
-    // void MoveTowardsPlayer()
-    // {
-    //     Vector3 direction = playerObj.transform.position - transform.position;
-    //     direction.y = 0;
-    //     direction.Normalize();
-
-    //     Vector3 move = direction * moveSpeed;
-    //     move.y += Physics.gravity.y;
-
-    //     controller.Move(move * Time.deltaTime);
-    // }
 
     void MoveTowardsPlayer()
     {
         Vector3 direction = playerObj.transform.position - transform.position;
-        direction.y = 0;              //ignore vertical
+        direction.y = 0;
         direction.Normalize();
 
-        // horizontal movement
-        Vector3 move = direction * moveSpeed;
-
-        // vertical movement
-        if (controller.isGrounded && verticalVelocity < 0)
+        // Handle grounding / gravity
+        if (controller.isGrounded)
         {
-            verticalVelocity = -2f;
+            if (verticalVelocity < 0)
+                verticalVelocity = -3f;
+        }
+        else
+        {
+            verticalVelocity += gravity * Time.deltaTime;
         }
 
-        verticalVelocity += gravity * Time.deltaTime;
+        // Horizontal movement (world units/sec → scale by deltaTime in Move)
+        Vector3 horizontalMove = direction * moveSpeed;
 
-        move.y = verticalVelocity;
+        // Vertical movement: velocity is already units/sec, so scale by deltaTime here
+        Vector3 verticalMove = Vector3.up * verticalVelocity;
 
-        controller.Move(move * Time.deltaTime);
+        // Combine and move — both components correctly scaled once
+        controller.Move((horizontalMove + verticalMove) * Time.deltaTime);
     }
-
 
     private void Update()
     {
@@ -103,14 +78,6 @@ public class bigEnemyThrow : MonoBehaviour
 
         FacePlayer();
 
-        // if (distanceBetweenObjects <= 40f)
-        // {
-        //     animator.SetBool("playerIsClose", true);
-        // }
-        // else
-        // {
-        //     animator.SetBool("playerIsClose", false);
-        // }
         if (distanceBetweenObjects > stopDistance)
         {
             animator.SetBool("playerIsClose", false);
@@ -119,8 +86,24 @@ public class bigEnemyThrow : MonoBehaviour
         else
         {
             animator.SetBool("playerIsClose", true);
+            ApplyGravityOnly();
         }
 
+    }
+
+    void ApplyGravityOnly()
+    {
+        if (controller.isGrounded)
+        {
+            if (verticalVelocity < 0)
+                verticalVelocity = -3f;
+        }
+        else
+        {
+            verticalVelocity += gravity * Time.deltaTime;
+        }
+
+        controller.Move(Vector3.up * verticalVelocity * Time.deltaTime);
     }
 
     private void FacePlayer()
@@ -139,6 +122,12 @@ public class bigEnemyThrow : MonoBehaviour
             transform.rotation = targetRotation;
         }
     }
+    // bool IsGrounded()
+    // {
+    //     Vector3 origin = transform.position + Vector3.up * 0.2f;
+    //     return Physics.Raycast(origin, Vector3.down, 0.4f);
+    // }
+
 
     public void SpawnBall()
     {

@@ -31,6 +31,9 @@ public class bigEnemyThrow : MonoBehaviour
     public float stopDistance = 17f;
     CharacterController controller;
 
+    private Vector3 lockedPosition;
+    private bool wasClose = false;
+
     private void OnEnable()
     {
         animator = GetComponent<Animator>();
@@ -38,6 +41,7 @@ public class bigEnemyThrow : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        animator.applyRootMotion = false; 
     }
 
 
@@ -74,21 +78,36 @@ public class bigEnemyThrow : MonoBehaviour
 
         distanceBetweenObjects = Vector3.Distance(transform.position, playerObj.transform.position);
         Debug.DrawLine(transform.position, playerObj.transform.position, Color.green);
-        Debug.Log(distanceBetweenObjects);
 
         FacePlayer();
 
-        if (distanceBetweenObjects > stopDistance)
+        bool isClose = distanceBetweenObjects <= stopDistance;
+
+        if (!isClose)
         {
+            wasClose = false;
             animator.SetBool("playerIsClose", false);
             MoveTowardsPlayer();
         }
         else
         {
+            // Lock XZ position the moment player enters close range
+            if (!wasClose)
+            {
+                lockedPosition = transform.position;
+                wasClose = true;
+            }
+
             animator.SetBool("playerIsClose", true);
             ApplyGravityOnly();
-        }
 
+            // Force XZ position every frame — prevents animation from sliding the enemy
+            transform.position = new Vector3(
+                lockedPosition.x,
+                transform.position.y,
+                lockedPosition.z
+            );
+        }
     }
 
     void ApplyGravityOnly()

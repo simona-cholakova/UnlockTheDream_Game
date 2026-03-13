@@ -11,70 +11,38 @@ public class BallEffect : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            //place effect at the hit point
             effect.transform.position = collision.contacts[0].point;
-            StopAllCoroutines();
             effect.SetActive(true);
-            StartCoroutine(DisableEffectAfterTime());
 
-            //check if shield is in apllied or not, if yes then attack the enemy, if no then attack player
-
-            if (PlayerInventory.instance != null &&
-                PlayerInventory.instance.shieldActive)
+            if (PlayerInventory.instance != null && PlayerInventory.instance.shieldActive)
             {
-                //shield ON, attack enemy
                 FollowPlayer follow = effect.GetComponent<FollowPlayer>();
-
                 if (follow == null)
                     follow = effect.AddComponent<FollowPlayer>();
 
                 follow.target = enemyTransform;
-                StartCoroutine(DestroyEnemyAfterDelay());
 
+                EffectTimer timer = effect.AddComponent<EffectTimer>();
+                timer.Begin(enemyTransform, true);
             }
             else
             {
-                //shield OFF, attack player
                 FollowPlayer follow = effect.GetComponent<FollowPlayer>();
-
                 if (follow == null)
                     follow = effect.AddComponent<FollowPlayer>();
 
                 follow.target = playerTransform;
+
+                EffectTimer timer = effect.AddComponent<EffectTimer>();
+                timer.Begin(null, false);
             }
+
             gameObject.SetActive(false);
         }
     }
-
-    IEnumerator DisableEffectAfterTime()
-    {
-        yield return new WaitForSeconds(3f);
-        effect.SetActive(false);
-    }
-    IEnumerator DestroyEnemyAfterDelay()
-    {
-        yield return new WaitForSeconds(3f);
-
-        FollowPlayer follow = effect.GetComponent<FollowPlayer>();
-
-        if (follow != null)
-        {
-            follow.target = null;
-            Destroy(follow);
-        }
-
-        if (enemyTransform != null)
-        {
-            Destroy(enemyTransform.gameObject);
-        }
-
-        effect.SetActive(false);
-    }
-
 }
 
 
-//helper script to make the effect follow the player
 public class FollowPlayer : MonoBehaviour
 {
     public Transform target;
@@ -86,5 +54,32 @@ public class FollowPlayer : MonoBehaviour
         {
             transform.position = Vector3.Lerp(transform.position, target.position, speed * Time.deltaTime);
         }
+    }
+}
+
+
+public class EffectTimer : MonoBehaviour
+{
+    public void Begin(Transform enemy, bool shieldOn)
+    {
+        StartCoroutine(Run(enemy, shieldOn));
+    }
+
+    IEnumerator Run(Transform enemy, bool shieldOn)
+    {
+        yield return new WaitForSeconds(3f);
+
+        FollowPlayer follow = GetComponent<FollowPlayer>();
+        if (follow != null)
+        {
+            follow.target = null;
+            Destroy(follow);
+        }
+
+        if (shieldOn && enemy != null)
+            Destroy(enemy.gameObject);
+
+        gameObject.SetActive(false);
+        Destroy(this);
     }
 }

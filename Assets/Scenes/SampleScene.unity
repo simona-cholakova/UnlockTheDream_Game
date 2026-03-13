@@ -1313,13 +1313,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DistanceBetweenTwoObjects
   playerObj: {fileID: 732018294}
-  distanceBetweenObjects: 52.2362
+  distanceBetweenObjects: 5
   BlueBall: {fileID: 110878200}
   throwForce: 12
   rayHeight: 2
   rayDistance: 5
   yOffset: 0
-  moveSpeed: 5.5
+  moveSpeed: 2
   stopDistance: 29
 --- !u!143 &331541156
 CharacterController:
@@ -2270,7 +2270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35854464e6a21524e88c1dcde6d4a992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 10
+  moveSpeed: 30
   gravity: -9.81
   jumpHeight: 4
   orientation: {fileID: 1242608037}

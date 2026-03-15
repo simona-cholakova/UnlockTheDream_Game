@@ -267,8 +267,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FallingEnemy
   myParticles: {fileID: 1156542933}
   rotationSpeed: 100
-  lifetime: 50
-  sinkDuration: 6
+  lifetime: 30
+  sinkDuration: 5
   sinkSpeed: 2
 --- !u!135 &2788496
 SphereCollider:

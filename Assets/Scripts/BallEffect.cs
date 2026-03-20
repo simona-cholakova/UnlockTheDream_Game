@@ -14,23 +14,21 @@ public class BallEffect : MonoBehaviour
             effect.transform.position = collision.contacts[0].point;
             effect.SetActive(true);
 
+            // Remove any existing follow component first
+            FollowPlayer follow = effect.GetComponent<FollowPlayer>();
+            if (follow != null)
+                Destroy(follow);
+
             if (PlayerInventory.instance != null && PlayerInventory.instance.shieldActive)
             {
-                FollowPlayer follow = effect.GetComponent<FollowPlayer>();
-                if (follow == null)
-                    follow = effect.AddComponent<FollowPlayer>();
-
-                follow.target = enemyTransform;
-
+                // Effect stays at impact point when shield is active
                 EffectTimer timer = effect.AddComponent<EffectTimer>();
                 timer.Begin(enemyTransform, true);
             }
             else
             {
-                FollowPlayer follow = effect.GetComponent<FollowPlayer>();
-                if (follow == null)
-                    follow = effect.AddComponent<FollowPlayer>();
-
+                // Add FollowPlayer component and have it follow the player
+                follow = effect.AddComponent<FollowPlayer>();
                 follow.target = playerTransform;
 
                 EffectTimer timer = effect.AddComponent<EffectTimer>();

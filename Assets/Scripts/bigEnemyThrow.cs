@@ -15,6 +15,7 @@ public class bigEnemyThrow : MonoBehaviour
 
     [Header("Throw Settings")]
     public GameObject BlueBall;
+    public GameObject throwEffect;
     public float throwForce = 12f;
 
     [Header("Ground Check Settings")]
@@ -168,6 +169,16 @@ public class bigEnemyThrow : MonoBehaviour
 
         Vector3 dir = (playerObj.transform.position - BlueBall.transform.position).normalized;
         rb.AddForce(dir * throwForce, ForceMode.Impulse);
+
+        // Spawn effect at throw moment (before enemy disappears)
+        if (throwEffect != null)
+        {
+            GameObject effect = Instantiate(throwEffect, BlueBall.transform.position, Quaternion.identity);
+            effect.SetActive(true);
+        }
+
+        //destroy enemy after throwing the ball
+        Destroy(gameObject, 0.5f);
     }
 
 

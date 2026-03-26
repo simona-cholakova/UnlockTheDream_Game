@@ -5,79 +5,51 @@ public class BallEffect : MonoBehaviour
 {
     public GameObject effect;
     public Transform playerTransform;
-    public Transform enemyTransform;
+    public GameObject ownerEnemy;
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (!collision.gameObject.CompareTag("Ground")) return;
+
+        bool shieldOn = PlayerInventory.instance != null && PlayerInventory.instance.shieldActive;
+
+        if (ownerEnemy != null) Destroy(ownerEnemy);
+        else Debug.LogWarning("ownerEnemy is null on ball hit!");
+
+        if (!shieldOn && effect != null && playerTransform != null)
         {
-            effect.transform.position = collision.contacts[0].point;
             effect.SetActive(true);
 
-            // Remove any existing follow component first
-            FollowPlayer follow = effect.GetComponent<FollowPlayer>();
-            if (follow != null)
-                Destroy(follow);
+            // Start coroutine on the effect object itself — survives ball being destroyed
+            EffectFollower follower = effect.GetComponent<EffectFollower>();
+            if (follower == null)
+                follower = effect.AddComponent<EffectFollower>();
 
-            if (PlayerInventory.instance != null && PlayerInventory.instance.shieldActive)
-            {
-                // Effect stays at impact point when shield is active
-                EffectTimer timer = effect.AddComponent<EffectTimer>();
-                timer.Begin(enemyTransform, true);
-            }
-            else
-            {
-                // Add FollowPlayer component and have it follow the player
-                follow = effect.AddComponent<FollowPlayer>();
-                follow.target = playerTransform;
-
-                EffectTimer timer = effect.AddComponent<EffectTimer>();
-                timer.Begin(null, false);
-            }
-
-            gameObject.SetActive(false);
+            follower.Begin(playerTransform, 3f);
         }
+
+        Destroy(gameObject);
     }
 }
 
-
-public class FollowPlayer : MonoBehaviour
+public class EffectFollower : MonoBehaviour
 {
-    public Transform target;
-    public float speed = 5f;
-
-    private void Update()
+    public void Begin(Transform target, float duration)
     {
-        if (target != null)
-        {
-            transform.position = Vector3.Lerp(transform.position, target.position, speed * Time.deltaTime);
-        }
-    }
-}
-
-
-public class EffectTimer : MonoBehaviour
-{
-    public void Begin(Transform enemy, bool shieldOn)
-    {
-        StartCoroutine(Run(enemy, shieldOn));
+        StartCoroutine(Run(target, duration));
     }
 
-    IEnumerator Run(Transform enemy, bool shieldOn)
+    IEnumerator Run(Transform target, float duration)
     {
-        yield return new WaitForSeconds(3f);
-
-        FollowPlayer follow = GetComponent<FollowPlayer>();
-        if (follow != null)
+        float elapsed = 0f;
+        while (elapsed < duration)
         {
-            follow.target = null;
-            Destroy(follow);
+            if (target != null)
+                transform.position = target.position;
+            elapsed += Time.deltaTime;
+            yield return null;
         }
-
-        if (shieldOn && enemy != null)
-            Destroy(enemy.gameObject);
-
         gameObject.SetActive(false);
-        Destroy(this);
+        Destroy(GetComponent<EffectFollower>());
     }
 }

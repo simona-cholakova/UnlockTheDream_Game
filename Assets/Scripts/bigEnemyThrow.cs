@@ -42,7 +42,7 @@ public class bigEnemyThrow : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        animator.applyRootMotion = false; 
+        animator.applyRootMotion = false;
     }
 
 
@@ -154,6 +154,11 @@ public class bigEnemyThrow : MonoBehaviour
         BlueBall.transform.localPosition = Vector3.zero;
         BlueBall.SetActive(true);
 
+        // Tell the ball who its owner is
+        BallEffect ballEffect = BlueBall.GetComponent<BallEffect>();
+        if (ballEffect != null)
+            ballEffect.ownerEnemy = this.gameObject;
+
         Rigidbody rb = BlueBall.GetComponent<Rigidbody>();
         rb.isKinematic = true;
         rb.useGravity = false;
@@ -170,15 +175,13 @@ public class bigEnemyThrow : MonoBehaviour
         Vector3 dir = (playerObj.transform.position - BlueBall.transform.position).normalized;
         rb.AddForce(dir * throwForce, ForceMode.Impulse);
 
-        // Spawn effect at throw moment (before enemy disappears)
         if (throwEffect != null)
         {
             GameObject effect = Instantiate(throwEffect, BlueBall.transform.position, Quaternion.identity);
             effect.SetActive(true);
         }
 
-        //destroy enemy after throwing the ball
-        Destroy(gameObject, 0.5f);
+        // ← Destroy(gameObject, 0.5f) REMOVED — BallEffect handles cleanup now
     }
 
 

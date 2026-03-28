@@ -8,6 +8,7 @@ public class EnemySpawner : MonoBehaviour
     public float spawnRadius = 50f;
     public float minDistanceFromPlayer = 50f;
     public float delayBetweenSpawns = 5f;
+    public int aliveEnemies = 0;
 
     [Header("References")]
     public GameObject playerObj;
@@ -33,8 +34,7 @@ public class EnemySpawner : MonoBehaviour
         SpawnEnemy();
 
         // Wait for it to die
-        yield return new WaitUntil(() =>
-            FindObjectsByType<bigEnemyThrow>(FindObjectsSortMode.None).Length == 0);
+        yield return new WaitUntil(() => aliveEnemies == 0);
 
         // Wave 2+ — spawn 2 enemies with delay between them, then repeat
         while (true)
@@ -43,8 +43,7 @@ public class EnemySpawner : MonoBehaviour
             yield return new WaitForSeconds(delayBetweenSpawns);
             SpawnEnemy();
 
-            yield return new WaitUntil(() =>
-                FindObjectsByType<bigEnemyThrow>(FindObjectsSortMode.None).Length == 0);
+            yield return new WaitUntil(() => aliveEnemies == 0);
         }
     }
 
@@ -53,9 +52,14 @@ public class EnemySpawner : MonoBehaviour
         Vector3 spawnPosition = GetRandomSpawnPosition();
         GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
 
+        aliveEnemies++;
+
         bigEnemyThrow enemyScript = enemy.GetComponent<bigEnemyThrow>();
         if (enemyScript != null)
+        {
             enemyScript.playerObj = playerObj;
+            enemyScript.spawner = this;
+        }
 
         Debug.Log("Spawned enemy at " + spawnPosition);
     }

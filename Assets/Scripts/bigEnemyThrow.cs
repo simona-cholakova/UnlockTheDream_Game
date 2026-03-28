@@ -12,6 +12,7 @@ public class bigEnemyThrow : MonoBehaviour
     private Animator animator;
 
     public float distanceBetweenObjects;
+    public EnemySpawner spawner;
 
     [Header("Throw Settings")]
     public GameObject BlueBall;
@@ -182,6 +183,14 @@ public class bigEnemyThrow : MonoBehaviour
         }
 
         // ← Destroy(gameObject, 0.5f) REMOVED — BallEffect handles cleanup now
+    }
+
+    public void Die()
+    {
+        if (spawner != null)
+            spawner.aliveEnemies--;
+
+        Destroy(gameObject);
     }
 
 

@@ -9,6 +9,11 @@ public class KeyPickup : MonoBehaviour
     {
         audio = GetComponent<AudioSource>();         
     }
+    
+    void Update()
+    {
+        transform.Rotate(0, 0, 100 * Time.deltaTime);
+    }
 
     void OnTriggerEnter(Collider other)
     {

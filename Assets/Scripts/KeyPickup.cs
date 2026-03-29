@@ -7,9 +7,9 @@ public class KeyPickup : MonoBehaviour
 
     void Awake()
     {
-        audio = GetComponent<AudioSource>();         
+        audio = GetComponent<AudioSource>();
     }
-    
+
     void Update()
     {
         transform.Rotate(0, 0, 100 * Time.deltaTime);
@@ -20,8 +20,13 @@ public class KeyPickup : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             KeyManager.instance.AddKey();
-            audio.Play();
             Debug.Log("Key collected!");
+
+            audio.Play();
+            GetComponent<Collider>().enabled = false;
+            GetComponent<MeshRenderer>().enabled = false;
+
+            Destroy(gameObject, audio.clip.length);
         }
     }
 }

@@ -193,6 +193,12 @@ public class bigEnemyThrow : MonoBehaviour
         Destroy(gameObject);
     }
 
+    private void OnDestroy()
+    {
+        if (spawner != null)
+            spawner.aliveEnemies--;
+    }
+
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()

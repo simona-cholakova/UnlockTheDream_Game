@@ -91,4 +91,5 @@ public class EnemySpawner : MonoBehaviour
         Debug.LogWarning("Could not find valid spawn position after " + maxAttempts + " attempts");
         return playerObj.transform.position + Vector3.forward * minDistanceFromPlayer;
     }
+
 }

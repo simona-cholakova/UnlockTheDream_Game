@@ -25,7 +25,7 @@ public class BallEffect : MonoBehaviour
             if (follower == null)
                 follower = effect.AddComponent<EffectFollower>();
 
-            follower.Begin(playerTransform, 3f);
+            follower.Begin(playerTransform, 1.5f);
         }
 
         Destroy(gameObject);

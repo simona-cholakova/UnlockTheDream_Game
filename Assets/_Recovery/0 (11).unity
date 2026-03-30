@@ -4560,7 +4560,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1330407642056684707, guid: 63c76cfb42cea0e429cc31b49501da0e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 200
+      value: 564
       objectReference: {fileID: 0}
     - target: {fileID: 1330407642056684707, guid: 63c76cfb42cea0e429cc31b49501da0e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4673,7 +4673,7 @@ GameObject:
   - component: {fileID: 982441884}
   - component: {fileID: 982441885}
   m_Layer: 6
-  m_Name: Terrain
+  m_Name: Terrain (1)
   m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6177,56 +6177,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1600570725}
   m_SourcePrefab: {fileID: 100100000, guid: cc0fd657b60ef8c499b057056b948f16, type: 3}
---- !u!1 &1258930804
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1258930806}
-  - component: {fileID: 1258930805}
-  m_Layer: 0
-  m_Name: FallingEnemySpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1258930805
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1258930804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c6317e849aeafa45820f29684e84a99, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FallingEnemySpawner
-  fallingEnemy: {fileID: 2788492}
-  spawnInterval: 5
-  spawnHeight: 200
-  maxActiveEnemies: 7
-  spawnRadius: 100
-  terrain: {fileID: 982441882}
---- !u!4 &1258930806
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1258930804}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -504, y: 569.2828, z: 500}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1275300200
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6798,7 +6748,7 @@ GameObject:
   - component: {fileID: 1410601620}
   - component: {fileID: 1410601619}
   m_Layer: 6
-  m_Name: Terrain(1)
+  m_Name: Terrain
   m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9931,7 +9881,7 @@ GameObject:
   - component: {fileID: 2126465015}
   - component: {fileID: 2126465014}
   m_Layer: 0
-  m_Name: WalkingEnemySpawner
+  m_Name: EnemySpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10001,4 +9951,3 @@ SceneRoots:
   - {fileID: 2126465015}
   - {fileID: 1988791970}
   - {fileID: 1720971992}
-  - {fileID: 1258930806}

@@ -11,28 +11,28 @@ public class PlayerCam : MonoBehaviour
     float xRotation;
     float yRotation;
 
+    public bool isPaused = false;
+
     void Start()
     {
         //sets cursor in center and hides it
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false; 
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
     }
 
     void Update()
     {
-        //get mouse input
+        if (isPaused) return; //stop camera when game is on pause
+
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
 
-        yRotation += mouseX; //rotates left/right
+        yRotation += mouseX;
+        xRotation -= mouseY;
 
-        xRotation -= mouseY; //subtract mouseY because moving mouse up means looking up.
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); //Clamp - not to turn more than 90 degrees
-    
-        //rotate cam and orientation
-        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0); //sets the camera's direction.
-        orientation.rotation = Quaternion.Euler(0, yRotation, 0); //rotate the player body (only Y-axis)
-
+        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+        orientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
 }

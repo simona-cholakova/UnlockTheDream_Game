@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class KeyPickup : MonoBehaviour
 {
-
+    public int keyID; 
     public AudioSource audio;
 
     void Awake()
@@ -19,8 +19,8 @@ public class KeyPickup : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            KeyManager.instance.AddKey();
-            Debug.Log("Key collected!");
+            KeyManager.instance.AddKey(keyID); 
+            Debug.Log("Key collected: " + keyID);
 
             audio.Play();
             GetComponent<Collider>().enabled = false;

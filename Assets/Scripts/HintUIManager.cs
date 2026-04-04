@@ -5,11 +5,19 @@ public class HintUIManager : MonoBehaviour
     public GameObject hintPanel;
     public PlayerCam playerCam;
 
-    // void Start()
-    // {
-    //     Cursor.lockState = CursorLockMode.Locked;
-    //     Cursor.visible = false;
-    // }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            if (hintPanel.activeSelf)
+                CloseHint();
+            else
+                OpenHint();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape) && hintPanel.activeSelf)
+            CloseHint();
+    }
 
     public void OpenHint()
     {
@@ -19,20 +27,17 @@ public class HintUIManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        playerCam.isPaused = true; //stop camera
+        playerCam.isPaused = true;
     }
+
     public void CloseHint()
     {
         hintPanel.SetActive(false);
         Time.timeScale = 1f;
 
-        //Cursor.lockState = CursorLockMode.Locked;
-        //Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
-        playerCam.isPaused = false; // resume camera
-    }
-    public void ClickTest()
-    {
-        Debug.Log("UI CLICK WORKS");
+        playerCam.isPaused = false;
     }
 }

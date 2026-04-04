@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Big Enemy
+  - WhiteCrystal
   layers:
   - Default
   - TransparentFX

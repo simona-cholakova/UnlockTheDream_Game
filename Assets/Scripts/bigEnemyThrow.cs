@@ -17,6 +17,7 @@ public class bigEnemyThrow : MonoBehaviour
     [Header("Throw Settings")]
     public GameObject BlueBall;
     public GameObject throwEffect;
+    private AudioSource effectSound;
     public float throwForce = 12f;
 
     [Header("Ground Check Settings")]
@@ -180,6 +181,7 @@ public class bigEnemyThrow : MonoBehaviour
         {
             GameObject effect = Instantiate(throwEffect, BlueBall.transform.position, Quaternion.identity);
             effect.SetActive(true);
+            effectSound = effect.GetComponent<AudioSource>();
         }
 
         // ← Destroy(gameObject, 0.5f) REMOVED — BallEffect handles cleanup now

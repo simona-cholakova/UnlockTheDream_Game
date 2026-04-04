@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class FallingEnemy : MonoBehaviour
 {
-    public ParticleSystem myParticles;
+    //public ParticleSystem myParticles;
     public float rotationSpeed = 100f;
 
     [Header("Sink Settings")]
-    public float lifetime = 60f;        //total time (falling+sinking) before gone
-    public float sinkDuration = 3f;     //how long the sinking takes
-    public float sinkSpeed = 2f;        //how fast it sinks into ground
+    public float lifetime = 40f;
+    public float sinkDuration = 3f;
+    public float sinkSpeed = 2f;
 
     private float timer = 0f;
     private bool isSinking = false;
@@ -23,45 +23,93 @@ public class FallingEnemy : MonoBehaviour
 
     void Update()
     {
-        timer += Time.deltaTime;
+        timer += Time.unscaledDeltaTime;
 
-        //always rotate on Y
         transform.Rotate(0, rotationSpeed * Time.deltaTime, 0);
 
-        //start sinking when lifetime is nearly up
         if (!isSinking && timer >= lifetime - sinkDuration)
         {
             StartSinking();
         }
 
-        // Sink into the ground
         if (isSinking)
         {
-            transform.position += Vector3.down * sinkSpeed * Time.deltaTime;
+            transform.position += Vector3.down * sinkSpeed * Time.unscaledDeltaTime;
         }
 
-        // Hard destroy fallback after full lifetime
         if (timer >= lifetime)
         {
             Destroy(gameObject);
         }
+
+        if (transform.position.y < -50f)
+        {
+            Destroy(gameObject);
+        }
     }
+
+    // private void OnCollisionEnter(Collision collision)
+    // {
+    //     if (collision.gameObject.CompareTag("Player"))
+    //     {
+    //         Debug.Log("Hit player!");
+    //         if (myParticles != null)
+    //             myParticles.Play();
+    //     }
+    // }
+
+    // private void OnCollisionEnter(Collision collision)
+    // {
+    //     if (collision.gameObject.CompareTag("Player"))
+    //     {
+    //         Debug.Log("Hit player!");
+
+    //         if (myParticles != null)
+    //         {
+    //             // Reset position in front of camera (safety)
+    //             myParticles.transform.localPosition = new Vector3(0, 0, 1f);
+
+    //             // 🔑 Restart effect properly
+    //             myParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+    //             myParticles.Play();
+    //         }
+    //     }
+    // }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("Hit player!");
-            myParticles.Play();
+
+            PlayerCam playerCam = FindObjectOfType<PlayerCam>();
+
+            if (playerCam != null)
+            {
+                Debug.Log("PlayerCam FOUND!");
+                playerCam.PlayHitEffect();
+            }
+            else
+            {
+                Debug.LogError("PlayerCam NOT FOUND!");
+            }
         }
     }
-
     void StartSinking()
     {
         isSinking = true;
 
-        // Disable physics and collider so it slides through the ground cleanly
-        rb.isKinematic = true;
-        col.enabled = false;
+        if (rb != null)
+            rb.isKinematic = true;
+
+        if (col != null)
+            col.enabled = false;
+    }
+
+    private void OnDestroy()
+    {
+        // ✅ Mathf.Max prevents count going negative
+        FallingEnemySpawner.activeEnemies =
+            Mathf.Max(0, FallingEnemySpawner.activeEnemies - 1);
     }
 }

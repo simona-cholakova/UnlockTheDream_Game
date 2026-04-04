@@ -20,7 +20,7 @@ public class BallEffect : MonoBehaviour
         {
             effect.SetActive(true);
 
-            // Start coroutine on the effect object itself — survives ball being destroyed
+            //start coroutine on the effect object itself — survives ball being destroyed
             EffectFollower follower = effect.GetComponent<EffectFollower>();
             if (follower == null)
                 follower = effect.AddComponent<EffectFollower>();

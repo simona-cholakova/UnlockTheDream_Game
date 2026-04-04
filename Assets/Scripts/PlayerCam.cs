@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerCam : MonoBehaviour
 {
@@ -14,6 +15,10 @@ public class PlayerCam : MonoBehaviour
     public bool isPaused = false;
 
     public ParticleSystem hitEffect;
+
+    [Header("Shooting")]
+    public float shootDistance = 1000f;
+    public LayerMask hitLayers;
 
     void Start()
     {
@@ -55,7 +60,13 @@ public class PlayerCam : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            TryShoot();
+        }
     }
+
 
     public void PlayHitEffect()
     {
@@ -82,4 +93,77 @@ public class PlayerCam : MonoBehaviour
             hitEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
     }
+
+
+    void TryShoot()
+    {
+        if (!PlayerInventory.instance.hasPotion)
+        {
+            Debug.Log("NO POTION");
+            return;
+        }
+
+        Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+
+        Vector3 startPoint = transform.position
+                           + transform.right * 0.4f
+                           + transform.up * -0.3f;
+
+        Vector3 endPoint = transform.position + transform.forward * shootDistance;
+
+        //QueryTriggerInteraction.Collide makes raycast hit trigger colliders too
+        if (Physics.Raycast(ray, out hit, shootDistance, ~0, QueryTriggerInteraction.Collide))
+        {
+            Debug.Log("Ray hit: " + hit.collider.name);
+
+            FallingEnemy enemy = hit.collider.GetComponentInParent<FallingEnemy>();
+            if (enemy != null)
+            {
+                Debug.Log("Falling enemy hit!");
+                Destroy(enemy.gameObject);
+                endPoint = hit.point;
+            }
+        }
+
+        StartCoroutine(ShootLine(startPoint, endPoint));
+    }
+
+    IEnumerator ShootLine(Vector3 start, Vector3 end)
+    {
+        GameObject lineObj = new GameObject("ShotLine");
+        LineRenderer lr = lineObj.AddComponent<LineRenderer>();
+
+        lr.useWorldSpace = true;
+        lr.positionCount = 2;
+        lr.SetPosition(0, start);
+        lr.SetPosition(1, end);
+
+        lr.startWidth = 0.15f;  
+        lr.endWidth = 0.1f;
+
+        Material mat = new Material(Shader.Find("Sprites/Default"));
+        lr.material = mat;
+
+        float duration = 0.8f;  
+        float time = 0;
+
+        //Color beamColor = new Color(1f, 0f, 0f); - red 
+        Color beamColor = new Color(1f, 0.3f, 0.3f);
+
+        while (time < duration)
+        {
+            float alpha = Mathf.Lerp(1f, 0f, time / duration);
+            Color c = new Color(beamColor.r, beamColor.g, beamColor.b, alpha);
+            lr.startColor = c;
+            lr.endColor = c;
+
+            time += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        Destroy(lineObj);
+    }
+
+
 }

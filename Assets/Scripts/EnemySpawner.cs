@@ -84,12 +84,25 @@ public class EnemySpawner : MonoBehaviour
             else
                 spawnPosition.y = playerObj.transform.position.y;
 
-            if (Vector3.Distance(spawnPosition, playerObj.transform.position) > minDistanceFromPlayer)
+            if (Vector3.Distance(spawnPosition, playerObj.transform.position) > minDistanceFromPlayer && !IsInsideStorage(spawnPosition))
                 return spawnPosition;
         }
 
         Debug.LogWarning("Could not find valid spawn position after " + maxAttempts + " attempts");
         return playerObj.transform.position + Vector3.forward * minDistanceFromPlayer;
+    }
+
+    bool IsInsideStorage(Vector3 position)
+    {
+        Collider[] hits = Physics.OverlapSphere(position, 1f);
+
+        foreach (var hit in hits)
+        {
+            if (hit.CompareTag("Storage"))
+                return true;
+        }
+
+        return false;
     }
 
 }

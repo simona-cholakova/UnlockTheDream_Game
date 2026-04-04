@@ -168,6 +168,8 @@ public class bigEnemyThrow : MonoBehaviour
 
     public void ThrowBall()
     {
+        if (StorageZone.playerInside) return; //don't throw while player is inside storage house
+
         BlueBall.transform.parent = null;
 
         Rigidbody rb = BlueBall.GetComponent<Rigidbody>();

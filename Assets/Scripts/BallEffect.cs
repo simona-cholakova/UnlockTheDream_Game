@@ -18,6 +18,8 @@ public class BallEffect : MonoBehaviour
 
         if (!shieldOn && effect != null && playerTransform != null)
         {
+            if (StorageZone.playerInside) return;
+
             effect.SetActive(true);
 
             //start coroutine on the effect object itself — survives ball being destroyed

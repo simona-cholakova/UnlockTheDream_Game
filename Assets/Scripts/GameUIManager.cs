@@ -1,0 +1,76 @@
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class GameUIManager : MonoBehaviour
+{
+    public static GameUIManager instance;
+
+    [Header("Keys")]
+    public Image[] keySlots;           //3 key icons
+    public Color keyLockedColor = new Color(0.3f, 0.3f, 0.3f, 1f);
+    public Color keyUnlockedColor = Color.white;
+
+    [Header("Health")]
+    public Slider healthSlider;
+    public Image healthFill;
+    public Gradient healthGradient;    //set green->yellow->red in Inspector
+
+    [Header("Inventory Icons")]
+    public Image shieldIcon;
+    public Image potionIcon;
+    public Color itemMissingColor = new Color(0.3f, 0.3f, 0.3f, 0.5f);
+    public Color itemHasColor = Color.white;
+
+    void Awake() => instance = this;
+
+    void Start()
+    {
+        // Start all keys gray
+        foreach (var slot in keySlots)
+            slot.color = keyLockedColor;
+
+        // Start shield and potion grayed out
+        if (shieldIcon != null) shieldIcon.color = itemMissingColor;
+        if (potionIcon != null) potionIcon.color = itemMissingColor;
+
+        // Init health bar
+        if (healthSlider != null && PlayerHealth.instance != null)
+        {
+            healthSlider.maxValue = PlayerHealth.instance.maxHealth;
+            healthSlider.value = PlayerHealth.instance.currentHealth;
+        }
+    }
+
+    // Call this from KeyManager when a key is collected
+    public void UpdateKeys(int collectedCount)
+    {
+        for (int i = 0; i < keySlots.Length; i++)
+        {
+            keySlots[i].color = i < collectedCount ? keyUnlockedColor : keyLockedColor;
+        }
+    }
+
+    // Call this from PlayerHealth
+    public void UpdateHealth(int current)
+    {
+        if (healthSlider == null) return;
+        healthSlider.value = current;
+
+        if (healthFill != null)
+            healthFill.color = healthGradient.Evaluate(
+                (float)current / PlayerHealth.instance.maxHealth
+            );
+    }
+
+    // Call these from PlayerInventory when items are picked up
+    public void OnShieldPickedUp()
+    {
+        if (shieldIcon != null) shieldIcon.color = itemHasColor;
+    }
+
+    public void OnPotionPickedUp()
+    {
+        if (potionIcon != null) potionIcon.color = itemHasColor;
+    }
+}

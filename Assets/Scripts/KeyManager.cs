@@ -32,7 +32,10 @@ public class KeyManager : MonoBehaviour
 
     void UpdateUI()
     {
-        keyText.text = keysCollected + "/" + totalKeys;
+        if (keyText != null)
+            keyText.text = keysCollected + "/" + totalKeys;
+
+        GameUIManager.instance?.UpdateKeys(keysCollected);
     }
     void HideCrystals()
     {

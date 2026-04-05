@@ -11,8 +11,8 @@ public class BallEffect : MonoBehaviour
     {
         if (!collision.gameObject.CompareTag("Ground")) return;
 
-        bool shieldOn = PlayerInventory.instance != null && PlayerInventory.instance.shieldActive;
-
+        bool shieldOn = PlayerInventory.instance != null && PlayerInventory.instance.IsShieldVisible();
+        
         if (ownerEnemy != null) Destroy(ownerEnemy);
         else Debug.LogWarning("ownerEnemy is null on ball hit!");
 

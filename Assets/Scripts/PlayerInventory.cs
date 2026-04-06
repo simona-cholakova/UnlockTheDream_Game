@@ -10,23 +10,34 @@ public class PlayerInventory : MonoBehaviour
 
     [Header("Shield Settings")]
     public Transform shieldHoldPoint;
-    public Vector3 shieldOffset = new Vector3(0.5f, -0.4f, 1.2f);
-    public Vector3 shieldRotation = new Vector3(0, 0, 0);
+    //public Vector3 shieldOffset = new Vector3(0.5f, -0.4f, 1.2f);
+    //public Vector3 shieldRotation = new Vector3(0, 0, 0);
 
     private float shieldTimer = 0f;
     private bool shieldTimerRunning = false;
 
     void Awake() => instance = this;
 
+    // public void PickUpShield()
+    // {
+    //     hasShield = true;
+    //     equippedShield.transform.SetParent(shieldHoldPoint);
+    //     equippedShield.transform.localPosition = shieldOffset;
+    //     equippedShield.transform.localRotation = Quaternion.Euler(shieldRotation);
+    //     equippedShield.SetActive(false);
+
+    //     //notify UI
+    //     GameUIManager.instance?.OnShieldPickedUp();
+    // }
+
     public void PickUpShield()
     {
         hasShield = true;
         equippedShield.transform.SetParent(shieldHoldPoint);
-        equippedShield.transform.localPosition = shieldOffset;
-        equippedShield.transform.localRotation = Quaternion.Euler(shieldRotation);
+        equippedShield.transform.localPosition = Vector3.zero;
+        equippedShield.transform.localRotation = Quaternion.identity;
         equippedShield.SetActive(false);
 
-        //notify UI
         GameUIManager.instance?.OnShieldPickedUp();
     }
 
@@ -58,7 +69,7 @@ public class PlayerInventory : MonoBehaviour
         if (shieldTimerRunning)
         {
             shieldTimer += Time.deltaTime;
-            if (shieldTimer >= 7f)
+            if (shieldTimer >= 50f)
             {
                 shieldActive = false;
                 equippedShield.SetActive(false);

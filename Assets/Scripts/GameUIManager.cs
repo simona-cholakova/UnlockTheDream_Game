@@ -14,7 +14,7 @@ public class GameUIManager : MonoBehaviour
     [Header("Health")]
     public Slider healthSlider;
     public Image healthFill;
-    public Gradient healthGradient;    //set green->yellow->red in Inspector
+    public Gradient healthGradient;
 
     [Header("Inventory Icons")]
     public Image shieldIcon;
@@ -22,19 +22,21 @@ public class GameUIManager : MonoBehaviour
     public Color itemMissingColor = new Color(0.3f, 0.3f, 0.3f, 0.5f);
     public Color itemHasColor = Color.white;
 
+    [Header("Game Over")]
+    public GameObject lostMessage;
+    public GameObject gameOverOverlay;
     void Awake() => instance = this;
 
     void Start()
     {
-        // Start all keys gray
+        //start all keys gray
         foreach (var slot in keySlots)
             slot.color = keyLockedColor;
 
-        // Start shield and potion grayed out
+        //start shield and potion grayed out
         if (shieldIcon != null) shieldIcon.color = itemMissingColor;
         if (potionIcon != null) potionIcon.color = itemMissingColor;
 
-        // Init health bar
         if (healthSlider != null && PlayerHealth.instance != null)
         {
             healthSlider.maxValue = PlayerHealth.instance.maxHealth;
@@ -42,7 +44,7 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
-    // Call this from KeyManager when a key is collected
+    //calling this from KeyManager when a key is collected
     public void UpdateKeys(int collectedCount)
     {
         for (int i = 0; i < keySlots.Length; i++)
@@ -50,8 +52,21 @@ public class GameUIManager : MonoBehaviour
             keySlots[i].color = i < collectedCount ? keyUnlockedColor : keyLockedColor;
         }
     }
+    public void ShowLostMessage()
+    {
+        if (lostMessage != null)
+            lostMessage.SetActive(true);
 
-    // Call this from PlayerHealth
+        if (gameOverOverlay != null)
+            gameOverOverlay.SetActive(true);
+
+        Time.timeScale = 0f;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    //calling this from PlayerHealth
     public void UpdateHealth(int current)
     {
         if (healthSlider == null) return;
@@ -63,7 +78,7 @@ public class GameUIManager : MonoBehaviour
             );
     }
 
-    // Call these from PlayerInventory when items are picked up
+    //calling these from PlayerInventory when items are picked up
     public void OnShieldPickedUp()
     {
         if (shieldIcon != null) shieldIcon.color = itemHasColor;

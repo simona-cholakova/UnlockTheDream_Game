@@ -20,8 +20,12 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage(int amount)
     {
         currentHealth = Mathf.Max(0, currentHealth - amount);
-        GameUIManager.instance?.UpdateHealth(currentHealth); 
-        if (currentHealth <= 0) onDeath?.Invoke();
+        GameUIManager.instance?.UpdateHealth(currentHealth);
+        if (currentHealth <= 0)
+        {
+            GameUIManager.instance?.ShowLostMessage();
+            onDeath?.Invoke();
+        }
     }
 
     public void Heal(int amount)

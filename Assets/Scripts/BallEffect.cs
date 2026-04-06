@@ -18,6 +18,8 @@ public class BallEffect : MonoBehaviour
 
         if (!shieldOn && effect != null && playerTransform != null)
         {
+            PlayerHealth.instance?.TakeDamage(20);
+
             if (StorageZone.playerInside) return;
 
             effect.SetActive(true);

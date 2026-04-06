@@ -81,6 +81,8 @@ public class FallingEnemy : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("Hit player!");
+            
+            PlayerHealth.instance?.TakeDamage(10);
 
             PlayerCam playerCam = FindObjectOfType<PlayerCam>();
 

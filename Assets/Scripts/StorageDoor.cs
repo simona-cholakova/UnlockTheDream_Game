@@ -3,7 +3,7 @@ using UnityEngine;
 public class StorageDoor : MonoBehaviour
 {
     public float openAngle = 90f;
-    public float openSpeed = 120f;
+    public float openSpeed = 200f;
 
     private bool isOpen;
     private float closedZ;

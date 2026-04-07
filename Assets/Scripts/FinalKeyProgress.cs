@@ -21,25 +21,17 @@ public class FinalKeyProgress : MonoBehaviour
 
     void Awake() => instance = this;
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            SpawnKey();
-        }
-    }
-
     public void AddStormcallerKill()
     {
         stormcallerKills++;
-        Debug.Log("Stormcaller kills: " + stormcallerKills);
+        //Debug.Log("Stormcaller kills: " + stormcallerKills);
         CheckSpawn();
     }
 
     public void AddFrostwalkerBlock()
     {
         frostwalkerBlocks++;
-        Debug.Log("Frostwalker blocks: " + frostwalkerBlocks);
+        //Debug.Log("Frostwalker blocks: " + frostwalkerBlocks);
         CheckSpawn();
     }
 
@@ -50,14 +42,12 @@ public class FinalKeyProgress : MonoBehaviour
 
         if (spawned)
         {
-            Debug.Log("Already spawned, skipping");
             return;
         }
 
         if (stormcallerKills >= requiredKills &&
             frostwalkerBlocks >= requiredBlocks)
         {
-            Debug.Log("🎉 CONDITIONS MET → spawning");
             SpawnKey();
             spawned = true;
         }
@@ -78,6 +68,6 @@ public class FinalKeyProgress : MonoBehaviour
         key.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
         key.SetActive(true);
 
-        Debug.Log("KEY 3 SPAWNED");
+        //Debug.Log("KEY 3 SPAWNED");
     }
 }

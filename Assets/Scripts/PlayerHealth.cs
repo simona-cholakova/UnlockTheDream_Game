@@ -9,7 +9,7 @@ public class PlayerHealth : MonoBehaviour
     public int currentHealth;
 
     public UnityEvent onDeath;
-    public UnityEvent<int> onHealthChanged; // passes current health
+    public UnityEvent<int> onHealthChanged; //passes current health
 
     void Awake()
     {
@@ -26,11 +26,5 @@ public class PlayerHealth : MonoBehaviour
             GameUIManager.instance?.ShowLostMessage();
             onDeath?.Invoke();
         }
-    }
-
-    public void Heal(int amount)
-    {
-        currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
-        onHealthChanged?.Invoke(currentHealth);
     }
 }

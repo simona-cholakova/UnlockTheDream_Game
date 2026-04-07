@@ -7,36 +7,25 @@ public class PlayerInventory : MonoBehaviour
     public GameObject equippedShield;
     public bool shieldActive = false;
     public bool hasPotion = false;
+    private AudioSource audioSource;
 
     [Header("Shield Settings")]
     public Transform shieldHoldPoint;
-    //public Vector3 shieldOffset = new Vector3(0.5f, -0.4f, 1.2f);
-    //public Vector3 shieldRotation = new Vector3(0, 0, 0);
-
     private float shieldTimer = 0f;
     private bool shieldTimerRunning = false;
 
-    void Awake() => instance = this;
-
-    // public void PickUpShield()
-    // {
-    //     hasShield = true;
-    //     equippedShield.transform.SetParent(shieldHoldPoint);
-    //     equippedShield.transform.localPosition = shieldOffset;
-    //     equippedShield.transform.localRotation = Quaternion.Euler(shieldRotation);
-    //     equippedShield.SetActive(false);
-
-    //     //notify UI
-    //     GameUIManager.instance?.OnShieldPickedUp();
-    // }
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        instance = this;
+    }
 
     public void PickUpShield()
     {
         hasShield = true;
-        equippedShield.transform.SetParent(shieldHoldPoint);
-        equippedShield.transform.localPosition = Vector3.zero;
-        equippedShield.transform.localRotation = Quaternion.identity;
         equippedShield.SetActive(false);
+        audioSource.Play();
+        Invoke(nameof(StopSound), 1.0f);
 
         GameUIManager.instance?.OnShieldPickedUp();
     }
@@ -45,8 +34,16 @@ public class PlayerInventory : MonoBehaviour
     {
         hasPotion = true;
 
+        audioSource.Play();
+        Invoke(nameof(StopSound), 1.0f);
+
         //notify UI
         GameUIManager.instance?.OnPotionPickedUp();
+    }
+
+    void StopSound()
+    {
+        audioSource.Stop();
     }
 
     public bool IsShieldVisible()
@@ -58,7 +55,7 @@ public class PlayerInventory : MonoBehaviour
     {
         if (hasShield && Input.GetKeyDown(KeyCode.F))
         {
-            //Always show shield and restart timer on F press
+            //always show shield and restart timer on F press
             shieldActive = true;
             equippedShield.SetActive(true);
             shieldTimer = 0f;
@@ -68,7 +65,7 @@ public class PlayerInventory : MonoBehaviour
         if (shieldTimerRunning)
         {
             shieldTimer += Time.deltaTime;
-            if(shieldTimer >= 7f)
+            if (shieldTimer >= 7f)
             {
                 shieldActive = false;
                 equippedShield.SetActive(false);

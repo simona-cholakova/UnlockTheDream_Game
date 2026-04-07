@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class FallingEnemy : MonoBehaviour
 {
-    //public ParticleSystem myParticles;
     public float rotationSpeed = 100f;
 
     [Header("Sink Settings")]
@@ -34,7 +33,7 @@ public class FallingEnemy : MonoBehaviour
 
         if (isSinking)
         {
-            transform.position += Vector3.down * sinkSpeed * Time.unscaledDeltaTime;
+            transform.position += Vector3.down * sinkSpeed * Time.unscaledDeltaTime; //unscaledDeltaTime for something to keep running even if the game is paused
         }
 
         if (timer >= lifetime)
@@ -48,47 +47,16 @@ public class FallingEnemy : MonoBehaviour
         }
     }
 
-    // private void OnCollisionEnter(Collision collision)
-    // {
-    //     if (collision.gameObject.CompareTag("Player"))
-    //     {
-    //         Debug.Log("Hit player!");
-    //         if (myParticles != null)
-    //             myParticles.Play();
-    //     }
-    // }
-
-    // private void OnCollisionEnter(Collision collision)
-    // {
-    //     if (collision.gameObject.CompareTag("Player"))
-    //     {
-    //         Debug.Log("Hit player!");
-
-    //         if (myParticles != null)
-    //         {
-    //             // Reset position in front of camera (safety)
-    //             myParticles.transform.localPosition = new Vector3(0, 0, 1f);
-
-    //             //Restart effect properly
-    //             myParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-    //             myParticles.Play();
-    //         }
-    //     }
-    // }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Hit player!");
-            
+            //Debug.Log("Hit player!");
             PlayerHealth.instance?.TakeDamage(10);
-
             PlayerCam playerCam = FindObjectOfType<PlayerCam>();
 
             if (playerCam != null)
             {
-                Debug.Log("PlayerCam FOUND!");
                 playerCam.PlayHitEffect();
             }
             else

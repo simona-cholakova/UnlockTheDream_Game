@@ -6,7 +6,7 @@ public class EnemySpawner : MonoBehaviour
     [Header("Spawn Settings")]
     public GameObject enemyPrefab;
     public float spawnRadius = 520f;
-    public float minDistanceFromPlayer = 60f;
+    public float minDistanceFromPlayer = 50f;
     public float delayBetweenSpawns = 4f;
     public int aliveEnemies = 0;
 
@@ -17,8 +17,6 @@ public class EnemySpawner : MonoBehaviour
     [Header("Ball References")]
 
     public GameObject hitEffect;
-
-    private int wave = 0;
 
     private void Start()
     {
@@ -35,65 +33,23 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator WaveLoop()
     {
-        Debug.Log("Continuous spawning started");
-
+        //Debug.Log("Continuous spawning started");
         while (true)
         {
-            SpawnWave(2); //number of enemies per wave
+            SpawnWave(3); //number of enemies per wave
 
-            yield return new WaitForSeconds(15f); //delay between waves
+            yield return new WaitForSeconds(16f); //delay between waves, pause this coroutine for 16 seconds then continue
         }
     }
-    // void SpawnEnemy()
-    // {
-    //     Vector3 spawnPosition = GetRandomSpawnPosition();
-    //     GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
-
-    //     aliveEnemies++;
-
-    //     bigEnemyThrow enemyScript = enemy.GetComponent<bigEnemyThrow>();
-    //     if (enemyScript != null)
-    //     {
-    //         enemyScript.playerObj = playerObj;
-    //         enemyScript.spawner = this;
-
-    //         if (enemyScript.BlueBall != null)
-    //         {
-    //             BallEffect ballEffect = enemyScript.BlueBall.GetComponent<BallEffect>();
-    //             if (ballEffect != null)
-    //             {
-    //                 ballEffect.playerTransform = playerObj.transform;
-    //                 ballEffect.effect = hitEffect; // only this matters
-    //                 Debug.Log("Ball references injected successfully");
-    //             }
-    //             else
-    //                 Debug.LogError("BallEffect component not found on BlueBall!");
-    //         }
-    //         else
-    //             Debug.LogError("BlueBall is null on spawned enemy!");
-    //     }
-
-    //     if (StorageZone.playerInside)
-    //     {
-    //         Debug.Log("Player inside storage → enemy removed");
-    //         Destroy(enemy);
-    //         return;
-    //     }
-
-    //     aliveEnemies++;
-
-    //     Debug.Log("Spawned enemy at " + spawnPosition);
-    // }
 
     void SpawnEnemy()
     {
         Vector3 spawnPosition = GetRandomSpawnPosition();
         GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
 
-        //FIRST: handle storage logic
         if (StorageZone.playerInside)
         {
-            Debug.Log("Player inside storage → enemy removed");
+            //Debug.Log("Player inside storage, enemy removed");
             Destroy(enemy);
             return; 
         }
@@ -116,8 +72,7 @@ public class EnemySpawner : MonoBehaviour
                 }
             }
         }
-
-        Debug.Log("Spawned enemy at " + spawnPosition);
+        //Debug.Log("Spawned enemy at " + spawnPosition);
     }
 
     Vector3 GetRandomSpawnPosition()
@@ -135,7 +90,7 @@ public class EnemySpawner : MonoBehaviour
                 z + terrain.transform.position.z
             );
 
-            worldPos.y = terrain.SampleHeight(worldPos) + terrain.transform.position.y;
+            worldPos.y = terrain.SampleHeight(worldPos) + terrain.transform.position.y; //for enemy to spawn on top of the terrain
 
             if (Vector3.Distance(worldPos, playerObj.transform.position) < minDistanceFromPlayer)
                 continue;
@@ -145,14 +100,12 @@ public class EnemySpawner : MonoBehaviour
 
             return worldPos;
         }
-
-        Debug.LogWarning("Fallback spawn used");
-        return playerObj.transform.position + Random.insideUnitSphere * minDistanceFromPlayer;
+        return playerObj.transform.position + Random.insideUnitSphere * minDistanceFromPlayer; //if normal spawning fails spawn in radius of 1 from player
     }
 
     bool IsInsideStorage(Vector3 position)
     {
-        Collider[] hits = Physics.OverlapSphere(position, 1f);
+        Collider[] hits = Physics.OverlapSphere(position, 1f); //check for colliders in radius 1 around the position to see if it's inside the storage house 
 
         foreach (var hit in hits)
         {
@@ -162,8 +115,9 @@ public class EnemySpawner : MonoBehaviour
 
         return false;
     }
-    void Update()
-    {
-        //Debug.Log($"[Spawner] WalkingaliveEnemies: {aliveEnemies}");
-    }
+
+    // void Update()
+    // {
+    //     Debug.Log($"[Spawner] WalkingaliveEnemies: {aliveEnemies}");
+    // }
 }

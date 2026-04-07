@@ -21,13 +21,11 @@ public class FallingEnemySpawner : MonoBehaviour
     void Awake()
     {
         activeEnemies = 0;
-        Debug.Log("[Spawner] Awake — activeEnemies reset to 0");
     }
 
     void OnEnable()
     {
         activeEnemies = 0;
-        Debug.Log("[Spawner] OnEnable — activeEnemies reset to 0");
     }
 
     void Update()
@@ -37,11 +35,10 @@ public class FallingEnemySpawner : MonoBehaviour
         if (timer >= spawnInterval)
         {
             timer = 0f;
-            Debug.Log($"[Spawner] Tick — activeEnemies: {activeEnemies} / {maxActiveEnemies}");
+            //Debug.Log($"[Spawner] activeEnemies: {activeEnemies} / {maxActiveEnemies}");
 
             if (activeEnemies < maxActiveEnemies)
             {
-                Debug.Log("[Spawner] Calling SpawnEnemy...");
                 SpawnEnemy();
             }
             else
@@ -53,35 +50,33 @@ public class FallingEnemySpawner : MonoBehaviour
 
     void SpawnEnemy()
     {
-        Debug.Log($"[Spawner] SpawnEnemy entered. fallingEnemy={fallingEnemy}, terrain={terrain}");
-
         if (fallingEnemy == null)
         {
-            Debug.LogError("[Spawner] fallingEnemy prefab is NULL — assign it in the Inspector!");
+            Debug.LogError("[Spawner] fallingEnemy prefab is NULL, assign it in the Inspector!");
             return;
         }
 
         if (terrain == null)
         {
-            Debug.LogError("[Spawner] terrain is NULL — assign it in the Inspector!");
+            Debug.LogError("[Spawner] terrain is NULL, assign it in the Inspector!");
             return;
         }
 
         float angle = Random.Range(0f, Mathf.PI * 2f);
         float distance = Random.Range(0f, spawnRadius);
 
-        Vector3 spawnPos = transform.position + new Vector3(
+        Vector3 spawnPos = transform.position + new Vector3( //turns polar coordinates into a position (cos -> x) (sin -> z)
             Mathf.Cos(angle) * distance,
             0f,
             Mathf.Sin(angle) * distance
         );
 
-        spawnPos.y = terrain.SampleHeight(spawnPos) + spawnHeight;
+        spawnPos.y = terrain.SampleHeight(spawnPos) + spawnHeight; //SampleHeight is ground level, so enemy spawns at spawnHeight above the ground at that position
 
         GameObject enemy = Instantiate(fallingEnemy, spawnPos, Quaternion.identity);
         activeEnemies++;
 
-        Debug.Log($"[Spawner] Spawned enemy at {spawnPos} — activeEnemies now: {activeEnemies}");
+        //Debug.Log($"[Spawner] Spawned enemy at {spawnPos} — activeEnemies now: {activeEnemies}");
     }
 
     void OnDisable()

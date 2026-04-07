@@ -20,11 +20,6 @@ public class bigEnemyThrow : MonoBehaviour
     private AudioSource effectSound;
     public float throwForce = 12f;
 
-    [Header("Ground Check Settings")]
-    public float rayHeight = 2f;
-    public float rayDistance = 5f;
-    public float yOffset = 0f; 
-
     private float verticalVelocity = 0f;
     private float gravity = -25f;
 
@@ -41,18 +36,19 @@ public class bigEnemyThrow : MonoBehaviour
     {
         animator = GetComponent<Animator>();
     }
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        animator.applyRootMotion = false;
+        animator.applyRootMotion = false; //disable animation movement so character is moved only by code
     }
-
 
     void MoveTowardsPlayer()
     {
-        Vector3 direction = playerObj.transform.position - transform.position;
-        direction.y = 0;
-        direction.Normalize();
+        Vector3 direction = playerObj.transform.position - transform.position; //vector pointing from enemy to player
+        direction.y = 0; //ignore vertical difference 
+        direction.Normalize(); //vector length = 1
+        //speed is controlled only by moveSpeed not distance
 
         if (controller.isGrounded)
         {
@@ -61,12 +57,12 @@ public class bigEnemyThrow : MonoBehaviour
         }
         else
         {
-            verticalVelocity += gravity * Time.deltaTime;
+            verticalVelocity += gravity * Time.deltaTime; //makes enemy fall down kinda naturally 
         }
 
-        Vector3 horizontalMove = direction * moveSpeed;
+        Vector3 horizontalMove = direction * moveSpeed; //enemy moves toward player at moveSpeed
 
-        Vector3 verticalMove = Vector3.up * verticalVelocity;
+        Vector3 verticalMove = Vector3.up * verticalVelocity; //jumping/falling 
 
         controller.Move((horizontalMove + verticalMove) * Time.deltaTime);
     }
@@ -126,7 +122,6 @@ public class bigEnemyThrow : MonoBehaviour
 
     private void FacePlayer()
     {
-        //get direction to player (ignore vertical component for ground-based enemies)
         Vector3 direction = playerObj.transform.position - transform.position;
         direction.y = 0; 
 
@@ -135,24 +130,18 @@ public class bigEnemyThrow : MonoBehaviour
         {
             //create the rotation to look at player
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5f * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5f * Time.deltaTime); //smoothly rotates
 
             transform.rotation = targetRotation;
         }
     }
-    // bool IsGrounded()
-    // {
-    //     Vector3 origin = transform.position + Vector3.up * 0.2f;
-    //     return Physics.Raycast(origin, Vector3.down, 0.4f);
-    // }
 
-
-    public void SpawnBall()
+    public void SpawnBall() //called by animation marker
     {
         BlueBall.transform.localPosition = Vector3.zero;
         BlueBall.SetActive(true);
 
-        //tll the ball who its owner is
+        //tell the ball who its owner is
         BallEffect ballEffect = BlueBall.GetComponent<BallEffect>();
         if (ballEffect != null)
             ballEffect.ownerEnemy = this.gameObject;
@@ -162,7 +151,7 @@ public class bigEnemyThrow : MonoBehaviour
         rb.useGravity = false;
     }
 
-    public void ThrowBall()
+    public void ThrowBall() //called by animation marker
     {
         if (StorageZone.playerInside) return; //don't throw while player is inside storage house
 
@@ -181,29 +170,21 @@ public class bigEnemyThrow : MonoBehaviour
             effect.SetActive(true);
             effectSound = effect.GetComponent<AudioSource>();
         }
-
     }
-
-    // private void OnDestroy()
-    // {
-    //     if (spawner != null)
-    //         spawner.aliveEnemies--;
-    // }
 
     public void Die()
     {
         if (spawner != null)
         {
             spawner.aliveEnemies--;
-            //spawner.aliveEnemies = Mathf.Max(0, spawner.aliveEnemies - 1);
-            Debug.Log($"[Enemy] Died, Walking aliveEnemies now: {spawner.aliveEnemies}");
+            //Debug.Log($"[Enemy] Died, Walking aliveEnemies now: {spawner.aliveEnemies}");
         }
         Destroy(gameObject);
     }
 
 
 #if UNITY_EDITOR
-    private void OnDrawGizmos()
+    private void OnDrawGizmos() //for distance in editor
     {
         if (playerObj == null) return;
 

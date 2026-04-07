@@ -7,7 +7,7 @@ public class GameUIManager : MonoBehaviour
     public static GameUIManager instance;
 
     [Header("Keys")]
-    public Image[] keySlots;           //3 key icons
+    public Image[] keySlots; //3 key icons
     public Color keyLockedColor = new Color(0.3f, 0.3f, 0.3f, 1f);
     public Color keyUnlockedColor = Color.white;
 

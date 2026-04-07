@@ -9,6 +9,8 @@ public class PlayerCam : MonoBehaviour
     public Transform orientation;
     private AudioSource hitSound;
 
+    private AudioSource shootSound;
+
     float xRotation;
     float yRotation;
 
@@ -19,6 +21,7 @@ public class PlayerCam : MonoBehaviour
     [Header("Shooting")]
     public float shootDistance = 1000f;
     public LayerMask hitLayers;
+    
 
     void Start()
     {
@@ -166,6 +169,5 @@ public class PlayerCam : MonoBehaviour
 
         Destroy(lineObj);
     }
-
 
 }

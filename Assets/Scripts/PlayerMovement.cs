@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isGrounded && velocity.y < 0)
         {
-            velocity.y = -2f; // keeps player grounded
+            velocity.y = -2f; //keeps player grounded
         }
 
         float horizontal = Input.GetAxisRaw("Horizontal");

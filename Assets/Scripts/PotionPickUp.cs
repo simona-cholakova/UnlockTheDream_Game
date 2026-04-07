@@ -4,6 +4,7 @@ public class PotionPickUp : MonoBehaviour
 {
 
     private bool playerClose = false;
+    
 
     void Update()
     {

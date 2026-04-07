@@ -9,7 +9,7 @@ public class StorageZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInside = true;
-            Debug.Log("Player entered storage");
+            //Debug.Log("Player entered storage");
         }
     }
 
@@ -18,7 +18,7 @@ public class StorageZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInside = false;
-            Debug.Log("Player exited storage");
+            //Debug.Log("Player exited storage");
         }
     }
 }

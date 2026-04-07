@@ -10,7 +10,6 @@ public class ShieldPickUp : MonoBehaviour
         {
             PlayerInventory.instance.PickUpShield(); 
             gameObject.SetActive(false);
-            Debug.Log("New item added to inventory!");
         }
     }
 

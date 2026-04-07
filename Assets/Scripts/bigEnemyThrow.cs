@@ -23,7 +23,7 @@ public class bigEnemyThrow : MonoBehaviour
     [Header("Ground Check Settings")]
     public float rayHeight = 2f;
     public float rayDistance = 5f;
-    public float yOffset = 0f; //set to half collider height MAYBE???
+    public float yOffset = 0f; 
 
     private float verticalVelocity = 0f;
     private float gravity = -25f;
@@ -54,7 +54,6 @@ public class bigEnemyThrow : MonoBehaviour
         direction.y = 0;
         direction.Normalize();
 
-        // Handle grounding / gravity
         if (controller.isGrounded)
         {
             if (verticalVelocity < 0)
@@ -65,13 +64,10 @@ public class bigEnemyThrow : MonoBehaviour
             verticalVelocity += gravity * Time.deltaTime;
         }
 
-        // Horizontal movement (world units/sec → scale by deltaTime in Move)
         Vector3 horizontalMove = direction * moveSpeed;
 
-        // Vertical movement: velocity is already units/sec, so scale by deltaTime here
         Vector3 verticalMove = Vector3.up * verticalVelocity;
 
-        // Combine and move — both components correctly scaled once
         controller.Move((horizontalMove + verticalMove) * Time.deltaTime);
     }
 
@@ -94,7 +90,7 @@ public class bigEnemyThrow : MonoBehaviour
         }
         else
         {
-            // Lock XZ position the moment player enters close range
+            //lock XZ position the moment player enters close range
             if (!wasClose)
             {
                 lockedPosition = transform.position;
@@ -104,7 +100,7 @@ public class bigEnemyThrow : MonoBehaviour
             animator.SetBool("playerIsClose", true);
             ApplyGravityOnly();
 
-            // Force XZ position every frame — prevents animation from sliding the enemy
+            //force XZ position every frame — prevents animation from sliding the enemy
             transform.position = new Vector3(
                 lockedPosition.x,
                 transform.position.y,
@@ -132,7 +128,7 @@ public class bigEnemyThrow : MonoBehaviour
     {
         //get direction to player (ignore vertical component for ground-based enemies)
         Vector3 direction = playerObj.transform.position - transform.position;
-        direction.y = 0; // Keep the enemy upright
+        direction.y = 0; 
 
         //only rotate if there's a meaningful direction
         if (direction.magnitude > 0.01f)
@@ -156,7 +152,7 @@ public class bigEnemyThrow : MonoBehaviour
         BlueBall.transform.localPosition = Vector3.zero;
         BlueBall.SetActive(true);
 
-        // Tell the ball who its owner is
+        //tll the ball who its owner is
         BallEffect ballEffect = BlueBall.GetComponent<BallEffect>();
         if (ballEffect != null)
             ballEffect.ownerEnemy = this.gameObject;
@@ -186,21 +182,23 @@ public class bigEnemyThrow : MonoBehaviour
             effectSound = effect.GetComponent<AudioSource>();
         }
 
-        // ← Destroy(gameObject, 0.5f) REMOVED — BallEffect handles cleanup now
     }
+
+    // private void OnDestroy()
+    // {
+    //     if (spawner != null)
+    //         spawner.aliveEnemies--;
+    // }
 
     public void Die()
     {
         if (spawner != null)
+        {
             spawner.aliveEnemies--;
-
+            //spawner.aliveEnemies = Mathf.Max(0, spawner.aliveEnemies - 1);
+            Debug.Log($"[Enemy] Died, Walking aliveEnemies now: {spawner.aliveEnemies}");
+        }
         Destroy(gameObject);
-    }
-
-    private void OnDestroy()
-    {
-        if (spawner != null)
-            spawner.aliveEnemies--;
     }
 
 

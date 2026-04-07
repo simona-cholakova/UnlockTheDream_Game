@@ -49,7 +49,6 @@ public class PlayerInventory : MonoBehaviour
         GameUIManager.instance?.OnPotionPickedUp();
     }
 
-    //Use this wherever you check if shield blocks damage
     public bool IsShieldVisible()
     {
         return hasShield && shieldActive && equippedShield.activeSelf;
@@ -69,7 +68,7 @@ public class PlayerInventory : MonoBehaviour
         if (shieldTimerRunning)
         {
             shieldTimer += Time.deltaTime;
-            if (shieldTimer >= 50f)
+            if(shieldTimer >= 7f)
             {
                 shieldActive = false;
                 equippedShield.SetActive(false);

@@ -1,3 +1,65 @@
+// using UnityEngine;
+// using System.Collections;
+
+// public class BallEffect : MonoBehaviour
+// {
+//     public GameObject effect;
+//     public Transform playerTransform;
+//     public GameObject ownerEnemy;
+
+//     private void OnCollisionEnter(Collision collision)
+//     {
+
+//         if (!collision.gameObject.CompareTag("Ground")) return;
+
+//         bool shieldOn = PlayerInventory.instance != null && PlayerInventory.instance.IsShieldVisible();
+
+//         if (ownerEnemy != null) Destroy(ownerEnemy);
+//         else Debug.LogWarning("ownerEnemy is null on ball hit!");
+
+//         if (!shieldOn && effect != null && playerTransform != null)
+//         {
+//             PlayerHealth.instance?.TakeDamage(20);
+
+//             if (StorageZone.playerInside) return;
+
+//             effect.SetActive(true);
+
+//             //start coroutine on the effect object itself — survives ball being destroyed
+//             EffectFollower follower = effect.GetComponent<EffectFollower>();
+//             if (follower == null)
+//                 follower = effect.AddComponent<EffectFollower>();
+
+//             follower.Begin(playerTransform, 1.5f);
+//         }
+
+
+//         Destroy(gameObject);
+//     }
+// }
+
+// public class EffectFollower : MonoBehaviour
+// {
+//     public void Begin(Transform target, float duration)
+//     {
+//         StartCoroutine(Run(target, duration));
+//     }
+
+//     IEnumerator Run(Transform target, float duration)
+//     {
+//         float elapsed = 0f;
+//         while (elapsed < duration)
+//         {
+//             if (target != null)
+//                 transform.position = target.position;
+//             elapsed += Time.deltaTime;
+//             yield return null;
+//         }
+//         gameObject.SetActive(false);
+//         Destroy(GetComponent<EffectFollower>());
+//     }
+// }
+
 using UnityEngine;
 using System.Collections;
 
@@ -12,9 +74,31 @@ public class BallEffect : MonoBehaviour
         if (!collision.gameObject.CompareTag("Ground")) return;
 
         bool shieldOn = PlayerInventory.instance != null && PlayerInventory.instance.IsShieldVisible();
-        
-        if (ownerEnemy != null) Destroy(ownerEnemy);
-        else Debug.LogWarning("ownerEnemy is null on ball hit!");
+
+        if (ownerEnemy != null)
+        {
+            bigEnemyThrow enemyScript = ownerEnemy.GetComponent<bigEnemyThrow>();
+
+            if (enemyScript != null)
+            {
+                enemyScript.Die();
+            }
+            else
+            {
+                Debug.LogWarning("bigEnemyThrow not found on ownerEnemy!");
+                Destroy(ownerEnemy);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("ownerEnemy is null on ball hit!");
+        }
+
+        if (shieldOn)
+        {
+            Debug.Log("TRYING TO COUNT BLOCK");
+            FinalKeyProgress.instance?.AddFrostwalkerBlock();
+        }
 
         if (!shieldOn && effect != null && playerTransform != null)
         {
@@ -24,7 +108,6 @@ public class BallEffect : MonoBehaviour
 
             effect.SetActive(true);
 
-            //start coroutine on the effect object itself — survives ball being destroyed
             EffectFollower follower = effect.GetComponent<EffectFollower>();
             if (follower == null)
                 follower = effect.AddComponent<EffectFollower>();
@@ -34,6 +117,7 @@ public class BallEffect : MonoBehaviour
 
         Destroy(gameObject);
     }
+
 }
 
 public class EffectFollower : MonoBehaviour
@@ -46,13 +130,16 @@ public class EffectFollower : MonoBehaviour
     IEnumerator Run(Transform target, float duration)
     {
         float elapsed = 0f;
+
         while (elapsed < duration)
         {
             if (target != null)
                 transform.position = target.position;
+
             elapsed += Time.deltaTime;
             yield return null;
         }
+
         gameObject.SetActive(false);
         Destroy(GetComponent<EffectFollower>());
     }

@@ -27,6 +27,10 @@ public class GameUIManager : MonoBehaviour
     public GameObject gameOverOverlay;
     void Awake() => instance = this;
 
+    [Header("Win")]
+    public GameObject winMessage;
+    public GameObject winOverlay;
+
     void Start()
     {
         //start all keys gray
@@ -50,6 +54,12 @@ public class GameUIManager : MonoBehaviour
         for (int i = 0; i < keySlots.Length; i++)
         {
             keySlots[i].color = i < collectedCount ? keyUnlockedColor : keyLockedColor;
+        }
+
+        //WIN CONDITION
+        if (collectedCount >= keySlots.Length)
+        {
+            ShowWinMessage();
         }
     }
     public void ShowLostMessage()
@@ -87,5 +97,19 @@ public class GameUIManager : MonoBehaviour
     public void OnPotionPickedUp()
     {
         if (potionIcon != null) potionIcon.color = itemHasColor;
+    }
+
+    public void ShowWinMessage()
+    {
+        if (winMessage != null)
+            winMessage.SetActive(true);
+
+        if (winOverlay != null)
+            winOverlay.SetActive(true);
+
+        Time.timeScale = 0f;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }

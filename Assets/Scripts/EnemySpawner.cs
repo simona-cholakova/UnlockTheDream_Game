@@ -5,14 +5,18 @@ public class EnemySpawner : MonoBehaviour
 {
     [Header("Spawn Settings")]
     public GameObject enemyPrefab;
-    public float spawnRadius = 50f;
-    public float minDistanceFromPlayer = 50f;
-    public float delayBetweenSpawns = 5f;
+    public float spawnRadius = 520f;
+    public float minDistanceFromPlayer = 60f;
+    public float delayBetweenSpawns = 4f;
     public int aliveEnemies = 0;
 
     [Header("References")]
     public GameObject playerObj;
     public Terrain terrain;
+
+    [Header("Ball References")]
+
+    public GameObject hitEffect;
 
     private int wave = 0;
 
@@ -21,36 +25,78 @@ public class EnemySpawner : MonoBehaviour
         StartCoroutine(WaveLoop());
     }
 
-    IEnumerator WaveLoop()
+    void SpawnWave(int count)
     {
-        if (enemyPrefab == null || playerObj == null)
-        {
-            Debug.LogError("Enemy prefab or player reference is missing!");
-            yield break;
-        }
-
-        // Wave 1 — spawn 1 enemy
-        yield return new WaitForSeconds(delayBetweenSpawns);
-        SpawnEnemy();
-
-        // Wait for it to die
-        yield return new WaitUntil(() => aliveEnemies == 0);
-
-        // Wave 2+ — spawn 2 enemies with delay between them, then repeat
-        while (true)
+        for (int i = 0; i < count; i++)
         {
             SpawnEnemy();
-            yield return new WaitForSeconds(delayBetweenSpawns);
-            SpawnEnemy();
-
-            yield return new WaitUntil(() => aliveEnemies == 0);
         }
     }
+
+    IEnumerator WaveLoop()
+    {
+        Debug.Log("Continuous spawning started");
+
+        while (true)
+        {
+            SpawnWave(2); //number of enemies per wave
+
+            yield return new WaitForSeconds(15f); //delay between waves
+        }
+    }
+    // void SpawnEnemy()
+    // {
+    //     Vector3 spawnPosition = GetRandomSpawnPosition();
+    //     GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+
+    //     aliveEnemies++;
+
+    //     bigEnemyThrow enemyScript = enemy.GetComponent<bigEnemyThrow>();
+    //     if (enemyScript != null)
+    //     {
+    //         enemyScript.playerObj = playerObj;
+    //         enemyScript.spawner = this;
+
+    //         if (enemyScript.BlueBall != null)
+    //         {
+    //             BallEffect ballEffect = enemyScript.BlueBall.GetComponent<BallEffect>();
+    //             if (ballEffect != null)
+    //             {
+    //                 ballEffect.playerTransform = playerObj.transform;
+    //                 ballEffect.effect = hitEffect; // only this matters
+    //                 Debug.Log("Ball references injected successfully");
+    //             }
+    //             else
+    //                 Debug.LogError("BallEffect component not found on BlueBall!");
+    //         }
+    //         else
+    //             Debug.LogError("BlueBall is null on spawned enemy!");
+    //     }
+
+    //     if (StorageZone.playerInside)
+    //     {
+    //         Debug.Log("Player inside storage → enemy removed");
+    //         Destroy(enemy);
+    //         return;
+    //     }
+
+    //     aliveEnemies++;
+
+    //     Debug.Log("Spawned enemy at " + spawnPosition);
+    // }
 
     void SpawnEnemy()
     {
         Vector3 spawnPosition = GetRandomSpawnPosition();
         GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+
+        //FIRST: handle storage logic
+        if (StorageZone.playerInside)
+        {
+            Debug.Log("Player inside storage → enemy removed");
+            Destroy(enemy);
+            return; 
+        }
 
         aliveEnemies++;
 
@@ -59,6 +105,16 @@ public class EnemySpawner : MonoBehaviour
         {
             enemyScript.playerObj = playerObj;
             enemyScript.spawner = this;
+
+            if (enemyScript.BlueBall != null)
+            {
+                BallEffect ballEffect = enemyScript.BlueBall.GetComponent<BallEffect>();
+                if (ballEffect != null)
+                {
+                    ballEffect.playerTransform = playerObj.transform;
+                    ballEffect.effect = hitEffect;
+                }
+            }
         }
 
         Debug.Log("Spawned enemy at " + spawnPosition);
@@ -66,30 +122,32 @@ public class EnemySpawner : MonoBehaviour
 
     Vector3 GetRandomSpawnPosition()
     {
-        int maxAttempts = 30;
+        int maxAttempts = 50;
 
-        for (int attempts = 0; attempts < maxAttempts; attempts++)
+        for (int i = 0; i < maxAttempts; i++)
         {
-            float randomAngle = Random.Range(0f, Mathf.PI * 2f);
-            float randomDistance = Random.Range(minDistanceFromPlayer + 2f, spawnRadius);
+            float x = Random.Range(0, terrain.terrainData.size.x);
+            float z = Random.Range(0, terrain.terrainData.size.z);
 
-            Vector3 spawnPosition = playerObj.transform.position + new Vector3(
-                Mathf.Cos(randomAngle) * randomDistance,
-                0f,
-                Mathf.Sin(randomAngle) * randomDistance
+            Vector3 worldPos = new Vector3(
+                x + terrain.transform.position.x,
+                0,
+                z + terrain.transform.position.z
             );
 
-            if (terrain != null)
-                spawnPosition.y = terrain.SampleHeight(spawnPosition) + terrain.transform.position.y;
-            else
-                spawnPosition.y = playerObj.transform.position.y;
+            worldPos.y = terrain.SampleHeight(worldPos) + terrain.transform.position.y;
 
-            if (Vector3.Distance(spawnPosition, playerObj.transform.position) > minDistanceFromPlayer && !IsInsideStorage(spawnPosition))
-                return spawnPosition;
+            if (Vector3.Distance(worldPos, playerObj.transform.position) < minDistanceFromPlayer)
+                continue;
+
+            if (IsInsideStorage(worldPos))
+                continue;
+
+            return worldPos;
         }
 
-        Debug.LogWarning("Could not find valid spawn position after " + maxAttempts + " attempts");
-        return playerObj.transform.position + Vector3.forward * minDistanceFromPlayer;
+        Debug.LogWarning("Fallback spawn used");
+        return playerObj.transform.position + Random.insideUnitSphere * minDistanceFromPlayer;
     }
 
     bool IsInsideStorage(Vector3 position)
@@ -104,5 +162,8 @@ public class EnemySpawner : MonoBehaviour
 
         return false;
     }
-
+    void Update()
+    {
+        //Debug.Log($"[Spawner] WalkingaliveEnemies: {aliveEnemies}");
+    }
 }

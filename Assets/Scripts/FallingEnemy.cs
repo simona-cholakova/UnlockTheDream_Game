@@ -69,7 +69,7 @@ public class FallingEnemy : MonoBehaviour
     //             // Reset position in front of camera (safety)
     //             myParticles.transform.localPosition = new Vector3(0, 0, 1f);
 
-    //             // 🔑 Restart effect properly
+    //             //Restart effect properly
     //             myParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     //             myParticles.Play();
     //         }
@@ -110,7 +110,6 @@ public class FallingEnemy : MonoBehaviour
 
     private void OnDestroy()
     {
-        // ✅ Mathf.Max prevents count going negative
         FallingEnemySpawner.activeEnemies =
             Mathf.Max(0, FallingEnemySpawner.activeEnemies - 1);
     }

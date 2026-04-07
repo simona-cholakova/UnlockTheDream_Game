@@ -112,7 +112,6 @@ public class PlayerCam : MonoBehaviour
 
         Vector3 endPoint = transform.position + transform.forward * shootDistance;
 
-        //QueryTriggerInteraction.Collide makes raycast hit trigger colliders too
         if (Physics.Raycast(ray, out hit, shootDistance, ~0, QueryTriggerInteraction.Collide))
         {
             Debug.Log("Ray hit: " + hit.collider.name);
@@ -120,7 +119,10 @@ public class PlayerCam : MonoBehaviour
             FallingEnemy enemy = hit.collider.GetComponentInParent<FallingEnemy>();
             if (enemy != null)
             {
-                Debug.Log("Falling enemy hit!");
+                //Debug.Log("Falling enemy hit!");
+                Debug.Log("TRYING TO COUNT KILL");
+                FinalKeyProgress.instance?.AddStormcallerKill();
+
                 Destroy(enemy.gameObject);
                 endPoint = hit.point;
             }
@@ -139,13 +141,13 @@ public class PlayerCam : MonoBehaviour
         lr.SetPosition(0, start);
         lr.SetPosition(1, end);
 
-        lr.startWidth = 0.15f;  
+        lr.startWidth = 0.15f;
         lr.endWidth = 0.1f;
 
         Material mat = new Material(Shader.Find("Sprites/Default"));
         lr.material = mat;
 
-        float duration = 0.8f;  
+        float duration = 0.8f;
         float time = 0;
 
         //Color beamColor = new Color(1f, 0f, 0f); - red 

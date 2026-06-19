@@ -147,7 +147,7 @@ public class bigEnemyThrow : MonoBehaviour
             ballEffect.ownerEnemy = this.gameObject;
 
         Rigidbody rb = BlueBall.GetComponent<Rigidbody>();
-        rb.isKinematic = true;
+        rb.isKinematic = true; //stops physics
         rb.useGravity = false;
     }
 

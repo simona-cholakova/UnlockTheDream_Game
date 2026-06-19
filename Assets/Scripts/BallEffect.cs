@@ -35,7 +35,6 @@ public class BallEffect : MonoBehaviour
         if (shieldOn)
         {
             Debug.Log("TRYING TO COUNT BLOCK");
-            FinalKeyProgress.instance?.AddFrostwalkerBlock();
         }
 
         if (!shieldOn && effect != null && playerTransform != null)

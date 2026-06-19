@@ -6,7 +6,7 @@ public class FallingEnemySpawner : MonoBehaviour
     public GameObject fallingEnemy;
     public float spawnInterval = 5f;
     public float spawnHeight = 200f;
-    public int maxActiveEnemies = 5;
+    public int maxActiveEnemies = 8;
 
     [Header("Spawn Area")]
     public float spawnRadius = 1000f;

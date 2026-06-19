@@ -6,10 +6,7 @@ public class FinalKeyProgress : MonoBehaviour
 
     [Header("Requirements")]
     public int stormcallerKills = 0;
-    public int frostwalkerBlocks = 0;
-
     public int requiredKills = 5;
-    public int requiredBlocks = 4;
 
     [Header("Spawn")]
     public GameObject key3Prefab;
@@ -24,29 +21,10 @@ public class FinalKeyProgress : MonoBehaviour
     public void AddStormcallerKill()
     {
         stormcallerKills++;
-        //Debug.Log("Stormcaller kills: " + stormcallerKills);
-        CheckSpawn();
-    }
 
-    public void AddFrostwalkerBlock()
-    {
-        frostwalkerBlocks++;
-        //Debug.Log("Frostwalker blocks: " + frostwalkerBlocks);
-        CheckSpawn();
-    }
+        Debug.Log($"CHECK → kills: {stormcallerKills}/{requiredKills}");
 
-
-    void CheckSpawn()
-    {
-        Debug.Log($"CHECK → kills: {stormcallerKills}/{requiredKills}, blocks: {frostwalkerBlocks}/{requiredBlocks}");
-
-        if (spawned)
-        {
-            return;
-        }
-
-        if (stormcallerKills >= requiredKills &&
-            frostwalkerBlocks >= requiredBlocks)
+        if (!spawned && stormcallerKills >= requiredKills)
         {
             SpawnKey();
             spawned = true;
@@ -56,7 +34,7 @@ public class FinalKeyProgress : MonoBehaviour
     void SpawnKey()
     {
         Vector3 forwardDir = playerCamera.forward;
-        forwardDir.y = 0f; 
+        forwardDir.y = 0f;
         forwardDir.Normalize();
 
         Vector3 spawnPos = player.position
@@ -68,6 +46,6 @@ public class FinalKeyProgress : MonoBehaviour
         key.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
         key.SetActive(true);
 
-        //Debug.Log("KEY 3 SPAWNED");
+        Debug.Log("KEY 3 SPAWNED");
     }
 }
